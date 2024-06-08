@@ -1,0 +1,15 @@
+CALL_METHOD
+    Address("account_tdx_2_12y02z98matcdkewlqd2jhckvwfkl9r4lqhmfcmq07cfdcx4qx5rex9")
+    "withdraw"
+    Address("resource_tdx_2_1tk706nn7fehxxenug2re2u8pkzf5a0zjgu7ea6up7hjs2whfu6nu7g")
+    Decimal("250")
+;
+TAKE_ALL_FROM_WORKTOP
+    Address("resource_tdx_2_1tk706nn7fehxxenug2re2u8pkzf5a0zjgu7ea6up7hjs2whfu6nu7g")
+    Bucket("dna_bucket")
+;
+CALL_METHOD
+    Address("component_tdx_2_1cz5wzsgmcwwhx4vl5e70jtenjn9mf28hyxn8ung2kwmlkdutttl5s2")
+    "deposit_reward_pool"
+    Bucket("dna_bucket")
+;

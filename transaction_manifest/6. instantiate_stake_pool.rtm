@@ -1,0 +1,13 @@
+CALL_FUNCTION
+    Address("package_tdx_2_1p495kgzwts767tmapdtknvhdg9uuepvjklnjhxfr3snuy9zp6hh4ev")
+    "StakePool"
+    "instantiate_stake_pool"
+    Address("resource_tdx_2_1n2khts5x5l632l9ehtm0724erlh8rmch0xu7fq5q8mrfcsftnkvj89")
+    Address("resource_tdx_2_1thgpxr4h0hh65wt6k375sua3quefw4ynzhtag3c73guxavafldc4fj")
+    Address("resource_tdx_2_1tk706nn7fehxxenug2re2u8pkzf5a0zjgu7ea6up7hjs2whfu6nu7g")
+;
+CALL_METHOD
+    Address("account_tdx_2_12y02z98matcdkewlqd2jhckvwfkl9r4lqhmfcmq07cfdcx4qx5rex9")
+    "deposit_batch"
+    Expression("ENTIRE_WORKTOP")
+;

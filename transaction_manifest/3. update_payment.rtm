@@ -1,0 +1,12 @@
+CALL_METHOD
+    Address("account_tdx_2_12y02z98matcdkewlqd2jhckvwfkl9r4lqhmfcmq07cfdcx4qx5rex9")
+    "create_proof_of_amount"
+    Address("resource_tdx_2_1thgpxr4h0hh65wt6k375sua3quefw4ynzhtag3c73guxavafldc4fj")
+    Decimal("1")
+;
+CALL_METHOD
+    Address("component_tdx_2_1cqh6ktv53ktlq9fcjwmerh55jee86qyg23w9avfl6vk04nmlzqlc7g")
+    "update_payment"
+    Address("resource_tdx_2_1tknxxxxxxxxxradxrdxxxxxxxxx009923554798xxxxxxxxxtfd2jc")
+    Decimal("250")
+;

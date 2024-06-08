@@ -1,0 +1,20 @@
+CALL_METHOD
+    Address("account_tdx_2_128h3tgatzl2enh3k5ytnxxrea835f2jjt8dwk329fjwxzf02fn96dt")
+    "withdraw"
+    Address("resource_tdx_2_1tknxxxxxxxxxradxrdxxxxxxxxx009923554798xxxxxxxxxtfd2jc")
+    Decimal("250")
+;
+TAKE_ALL_FROM_WORKTOP
+    Address("resource_tdx_2_1tknxxxxxxxxxradxrdxxxxxxxxx009923554798xxxxxxxxxtfd2jc")
+    Bucket("nft_bucket")
+;
+CALL_METHOD
+    Address("component_tdx_2_1cqh6ktv53ktlq9fcjwmerh55jee86qyg23w9avfl6vk04nmlzqlc7g")
+    "buy_nft"
+    Bucket("nft_bucket")
+;
+CALL_METHOD
+    Address("account_tdx_2_128h3tgatzl2enh3k5ytnxxrea835f2jjt8dwk329fjwxzf02fn96dt")
+    "deposit_batch"
+    Expression("ENTIRE_WORKTOP")
+;

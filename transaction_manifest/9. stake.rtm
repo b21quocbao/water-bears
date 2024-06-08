@@ -1,0 +1,29 @@
+CALL_METHOD
+    Address("account_tdx_2_12y02z98matcdkewlqd2jhckvwfkl9r4lqhmfcmq07cfdcx4qx5rex9")
+    "create_proof_of_non_fungibles"
+    Address("resource_tdx_2_1nfk3devv4zat0dgn0q00v9fe0ggpmkuaeq8wtzl662m60wuvs59dml")
+    Array<NonFungibleLocalId>(
+        NonFungibleLocalId("#1#")
+    )
+;
+POP_FROM_AUTH_ZONE
+    Proof("proof_1")
+;
+CALL_METHOD
+    Address("account_tdx_2_12y02z98matcdkewlqd2jhckvwfkl9r4lqhmfcmq07cfdcx4qx5rex9")
+    "withdraw_non_fungibles"
+    Address("resource_tdx_2_1n2khts5x5l632l9ehtm0724erlh8rmch0xu7fq5q8mrfcsftnkvj89")
+    Array<NonFungibleLocalId>(
+        NonFungibleLocalId("<WaterBear_1>")
+    )
+;
+TAKE_ALL_FROM_WORKTOP
+    Address("resource_tdx_2_1n2khts5x5l632l9ehtm0724erlh8rmch0xu7fq5q8mrfcsftnkvj89")
+    Bucket("nft_bucket_1")
+;
+CALL_METHOD
+    Address("component_tdx_2_1cz5wzsgmcwwhx4vl5e70jtenjn9mf28hyxn8ung2kwmlkdutttl5s2")
+    "stake"
+    Bucket("nft_bucket_1")
+    Proof("proof_1")
+;

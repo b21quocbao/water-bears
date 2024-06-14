@@ -1,0 +1,13 @@
+CALL_FUNCTION
+    Address("package_tdx_2_1p5tnjevtetwpupam8jzdgkt0xe7x38c7c2dukrqpwmnhuxc9ncm95c")
+    "BreedNft"
+    "instantiate_breed_nft"
+    Address("resource_tdx_2_1t5x73kmmck9srd4u7f48wp849929dakyydusz6qk4tths2zznj9gw4")
+    Address("resource_tdx_2_1n2k6qtnlvl65dhhlf45sjn5uwzxmf7ny9qnezv7v8c47pyhvtua7y9")
+    Decimal("2")
+;
+CALL_METHOD
+    Address("account_tdx_2_12y02z98matcdkewlqd2jhckvwfkl9r4lqhmfcmq07cfdcx4qx5rex9")
+    "deposit_batch"
+    Expression("ENTIRE_WORKTOP")
+;

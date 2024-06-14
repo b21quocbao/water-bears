@@ -59,6 +59,7 @@ mod meme_nft {
             mint_nft => restrict_to: [OWNER, admin];
             withdraw_from_vault => restrict_to: [OWNER];
             buy_nft => PUBLIC;
+            withdraw_nft => restrict_to: [OWNER, admin];
         }
     }
 
@@ -89,6 +90,7 @@ mod meme_nft {
                 init {
                     "name" => "WaterBear", updatable;
                     "description" => "WaterBears Is Collection Of 3,333 Algorithmically Generated Tardigrades Living On The Radix Ledger. All Art Drawn By Hand In 24px Format. Explore The Collection's Ecosystem Through Staking, Gamified Mints And Custom Merchandise.", updatable;
+                    "icon_url" => Url::of("https://arweave.net/QHg7-pTKphBVbBWKl4O1yzuXDd4vT8C0ebx3FChc1pI"), updatable;
                     "tags" => vec!["nft", "meme"], updatable;
                 }
             ))
@@ -142,10 +144,14 @@ mod meme_nft {
             }
         }
 
-        pub fn buy_nft(&mut self, mut payment: Bucket) -> (NonFungibleBucket, Bucket) {
+        pub fn buy_nft(
+            &mut self,
+            mut payment: Bucket,
+            cnt: Decimal,
+        ) -> (Vec<NonFungibleBucket>, Bucket) {
             let nft_info = &mut self.nft_info;
             assert_eq!(
-                nft_info.current <= nft_info.supply,
+                nft_info.current + cnt - 1 <= nft_info.supply,
                 true,
                 "NFT supply exceeded"
             );
@@ -158,61 +164,92 @@ mod meme_nft {
                 payment_index_wrap, None,
                 "Only listed tokens are accepted as payments!"
             );
+
             let payment_index = payment_index_wrap.unwrap();
             let buy_info = &mut nft_info.buy_infos[payment_index];
 
-            let actual_payment = payment.take(buy_info.price);
+            let actual_payment = payment.take(buy_info.price * cnt);
 
             buy_info.vault.put(actual_payment);
 
-            let nft = nft_info
-                .vault
-                .take_non_fungible(&NonFungibleLocalId::String(
-                    StringNonFungibleLocalId::new(format!("WaterBear_{}", nft_info.current))
-                        .unwrap(),
-                ));
+            let mut nfts = Vec::new();
 
-            self.bought_nfts.push(nft_info.current);
+            for _ in 0..i32::try_from(cnt).unwrap() {
+                let nft = nft_info
+                    .vault
+                    .take_non_fungible(&NonFungibleLocalId::String(
+                        StringNonFungibleLocalId::new(format!("WaterBear_{}", nft_info.current))
+                            .unwrap(),
+                    ));
+                self.bought_nfts.push(nft_info.current);
+                nft_info.current += 1;
 
-            nft_info.current += 1;
+                nfts.push(nft);
+            }
 
-            return (nft, payment);
+            return (nfts, payment);
         }
 
         pub fn mint_nft(
             &mut self,
-            id: Decimal,
-            key_image_url: String,
-            background: String,
-            base: String,
-            mouth: String,
-            hats: String,
-            neck: String,
-            eyes: String,
-            clothes: String,
+            id: Vec<Decimal>,
+            key_image_url: Vec<String>,
+            background: Vec<String>,
+            base: Vec<String>,
+            mouth: Vec<String>,
+            hats: Vec<String>,
+            neck: Vec<String>,
+            eyes: Vec<String>,
+            clothes: Vec<String>,
         ) {
             let nft_info = &mut self.nft_info;
-            assert!(id == nft_info.supply + 1, "Id not match!");
-            let ticket = self.nft_resource_manager.mint_non_fungible(
-                &NonFungibleLocalId::String(
-                    StringNonFungibleLocalId::new(format!("WaterBear_{}", id))
-                        .unwrap(),
-                ),
-                WaterBear {
-                    name: String::from(format!("WaterBear #{}", id)),
-                    key_image_url: Url::of(key_image_url),
-                    background,
-                    base,
-                    mouth,
-                    hats,
-                    neck,
-                    eyes,
-                    clothes,
-                },
-            );
-            nft_info.vault.put(ticket.as_non_fungible());
+            for i in 0..id.len() {
+                assert!(id[i] == nft_info.supply + 1, "Id not match!");
+                let ticket = self.nft_resource_manager.mint_non_fungible(
+                    &NonFungibleLocalId::String(
+                        StringNonFungibleLocalId::new(format!("WaterBear_{}", id[i])).unwrap(),
+                    ),
+                    WaterBear {
+                        name: String::from(format!("WaterBear #{}", id[i])),
+                        key_image_url: Url::of(key_image_url[i].clone()),
+                        background: background[i].clone(),
+                        base: base[i].clone(),
+                        mouth: mouth[i].clone(),
+                        hats: hats[i].clone(),
+                        neck: neck[i].clone(),
+                        eyes: eyes[i].clone(),
+                        clothes: clothes[i].clone(),
+                    },
+                );
+                nft_info.vault.put(ticket.as_non_fungible());
 
-            nft_info.supply += 1;
+                nft_info.supply += 1;
+            }
+        }
+
+        pub fn withdraw_nft(&mut self, cnt: Decimal) -> Vec<NonFungibleBucket> {
+            let nft_info = &mut self.nft_info;
+            assert_eq!(
+                nft_info.current + cnt - 1 <= nft_info.supply,
+                true,
+                "NFT supply exceeded"
+            );
+            let mut nfts = Vec::new();
+
+            for _ in 0..i32::try_from(cnt).unwrap() {
+                let nft = nft_info
+                    .vault
+                    .take_non_fungible(&NonFungibleLocalId::String(
+                        StringNonFungibleLocalId::new(format!("WaterBear_{}", nft_info.current))
+                            .unwrap(),
+                    ));
+                self.bought_nfts.push(nft_info.current);
+                nft_info.current += 1;
+
+                nfts.push(nft);
+            }
+
+            return nfts;
         }
 
         pub fn withdraw_from_vault(&mut self, address: ResourceAddress) -> Bucket {

@@ -6,15 +6,13 @@ resolver = "2"
 
 [dependencies]
 chrono = "0.4.38"
-sbor = { git = "https://github.com/radixdlt/radixdlt-scrypto", tag = "v1.1.1" }
-scrypto = { git = "https://github.com/radixdlt/radixdlt-scrypto", tag = "v1.1.1" }
+sbor = { version = "1.2.0" }
+scrypto = { version = "1.2.0" }
 
 [dev-dependencies]
-transaction = { git = "https://github.com/radixdlt/radixdlt-scrypto", tag = "v1.1.1" }
-radix-engine = { git = "https://github.com/radixdlt/radixdlt-scrypto", tag = "v1.1.1" }
-scrypto-unit = { git = "https://github.com/radixdlt/radixdlt-scrypto", tag = "v1.1.1" }
-scrypto-test = { git = "https://github.com/radixdlt/radixdlt-scrypto", tag = "v1.1.1" }
-radix-engine-interface = { git = "https://github.com/radixdlt/radixdlt-scrypto", tag = "v1.1.1" }
+radix-engine = { version = "1.2.0" }
+scrypto-test = { version = "1.2.0" }
+radix-engine-interface = { version = "1.2.0" }
 water-bears = { path = ".", features = ["test"] }
 
 [features]

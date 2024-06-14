@@ -1,0 +1,20 @@
+CALL_METHOD
+    Address("account_tdx_2_12y02z98matcdkewlqd2jhckvwfkl9r4lqhmfcmq07cfdcx4qx5rex9")
+    "create_proof_of_amount"
+    Address("resource_tdx_2_1t5x73kmmck9srd4u7f48wp849929dakyydusz6qk4tths2zznj9gw4")
+    Decimal("1")
+;
+SET_ROLE
+    Address("resource_tdx_2_1ngpva0vcqfkylq4qhuxqwrqqjl7elfk03yv6e5hwng08lm6xaglefh")
+    Enum<0u8>()
+    "burner"
+    Enum<2u8>(
+        Enum<0u8>(
+            Enum<0u8>(
+                Enum<0u8>(
+                    NonFungibleGlobalId("resource_tdx_2_1nfxxxxxxxxxxglcllrxxxxxxxxx002350006550xxxxxxxxxqtcnwk:[61b89098ff09a620d08a265c46f740c999fc70fdc396de8b78a1cadc6e90ac9d]")
+                )
+            )
+        )
+    )
+;

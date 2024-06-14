@@ -1,0 +1,58 @@
+CALL_METHOD
+    Address("account_tdx_2_128h3tgatzl2enh3k5ytnxxrea835f2jjt8dwk329fjwxzf02fn96dt")
+    "create_proof_of_non_fungibles"
+    Address("resource_tdx_2_1ntr9s8ea8m6k5dqe6hlw8wh9cl9vpjf37me7upsc33paws5s9j6hug")
+    Array<NonFungibleLocalId>(
+        NonFungibleLocalId("#1#")
+    )
+;
+POP_FROM_AUTH_ZONE
+    Proof("proof_1")
+;
+CALL_METHOD
+    Address("account_tdx_2_128h3tgatzl2enh3k5ytnxxrea835f2jjt8dwk329fjwxzf02fn96dt")
+    "withdraw_non_fungibles"
+    Address("resource_tdx_2_1n2k6qtnlvl65dhhlf45sjn5uwzxmf7ny9qnezv7v8c47pyhvtua7y9")
+    Array<NonFungibleLocalId>(
+        NonFungibleLocalId("<WaterBear_1>")
+    )
+;
+TAKE_ALL_FROM_WORKTOP
+    Address("resource_tdx_2_1n2k6qtnlvl65dhhlf45sjn5uwzxmf7ny9qnezv7v8c47pyhvtua7y9")
+    Bucket("nft_bucket_1")
+;
+CALL_METHOD
+    Address("component_tdx_2_1crqntmap3fztduqaxug0ne3xzwd2mpf2yn9uvp9y65jaslz8jvjz0v")
+    "stake"
+    Bucket("nft_bucket_1")
+    Proof("proof_1")
+;
+CALL_METHOD
+    Address("account_tdx_2_128h3tgatzl2enh3k5ytnxxrea835f2jjt8dwk329fjwxzf02fn96dt")
+    "create_proof_of_non_fungibles"
+    Address("resource_tdx_2_1ntr9s8ea8m6k5dqe6hlw8wh9cl9vpjf37me7upsc33paws5s9j6hug")
+    Array<NonFungibleLocalId>(
+        NonFungibleLocalId("#1#")
+    )
+;
+POP_FROM_AUTH_ZONE
+    Proof("proof_2")
+;
+CALL_METHOD
+    Address("account_tdx_2_128h3tgatzl2enh3k5ytnxxrea835f2jjt8dwk329fjwxzf02fn96dt")
+    "withdraw_non_fungibles"
+    Address("resource_tdx_2_1n2k6qtnlvl65dhhlf45sjn5uwzxmf7ny9qnezv7v8c47pyhvtua7y9")
+    Array<NonFungibleLocalId>(
+        NonFungibleLocalId("<WaterBear_2>")
+    )
+;
+TAKE_ALL_FROM_WORKTOP
+    Address("resource_tdx_2_1n2k6qtnlvl65dhhlf45sjn5uwzxmf7ny9qnezv7v8c47pyhvtua7y9")
+    Bucket("nft_bucket_2")
+;
+CALL_METHOD
+    Address("component_tdx_2_1crqntmap3fztduqaxug0ne3xzwd2mpf2yn9uvp9y65jaslz8jvjz0v")
+    "stake"
+    Bucket("nft_bucket_2")
+    Proof("proof_2")
+;

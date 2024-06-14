@@ -1,0 +1,34 @@
+CALL_METHOD
+    Address("account_tdx_2_128h3tgatzl2enh3k5ytnxxrea835f2jjt8dwk329fjwxzf02fn96dt")
+    "create_proof_of_non_fungibles"
+    Address("resource_tdx_2_1n2k6qtnlvl65dhhlf45sjn5uwzxmf7ny9qnezv7v8c47pyhvtua7y9")
+    Array<NonFungibleLocalId>(
+        NonFungibleLocalId("<WaterBear_1>"),
+        NonFungibleLocalId("<WaterBear_2>")
+    )
+;
+POP_FROM_AUTH_ZONE
+    Proof("proof_1")
+;
+CALL_METHOD
+    Address("account_tdx_2_128h3tgatzl2enh3k5ytnxxrea835f2jjt8dwk329fjwxzf02fn96dt")
+    "withdraw"
+    Address("resource_tdx_2_1th9lefh8vkxc428kthlneedvrytvnxcm20hgjrhjts0sklc650j0z5")
+    Decimal("900")
+;
+TAKE_ALL_FROM_WORKTOP
+    Address("resource_tdx_2_1th9lefh8vkxc428kthlneedvrytvnxcm20hgjrhjts0sklc650j0z5")
+    Bucket("bucket")
+;
+CALL_METHOD
+    Address("component_tdx_2_1cqcdpckfc5h9ym9wtwp3wr6tkys0cckw6eap3qawur5fv5wn8hak65")
+    "buy_nft"
+    Bucket("bucket")
+    Decimal("3")
+    Proof("proof_1")
+;
+CALL_METHOD
+    Address("account_tdx_2_128h3tgatzl2enh3k5ytnxxrea835f2jjt8dwk329fjwxzf02fn96dt")
+    "deposit_batch"
+    Expression("ENTIRE_WORKTOP")
+;

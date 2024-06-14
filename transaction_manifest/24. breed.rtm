@@ -1,0 +1,23 @@
+CALL_METHOD
+    Address("account_tdx_2_128h3tgatzl2enh3k5ytnxxrea835f2jjt8dwk329fjwxzf02fn96dt")
+    "withdraw_non_fungibles"
+    Address("resource_tdx_2_1ngpva0vcqfkylq4qhuxqwrqqjl7elfk03yv6e5hwng08lm6xaglefh")
+    Array<NonFungibleLocalId>(
+        NonFungibleLocalId("<TestTube_1>"),
+        NonFungibleLocalId("<TestTube_2>")
+    )
+;
+TAKE_ALL_FROM_WORKTOP
+    Address("resource_tdx_2_1ngpva0vcqfkylq4qhuxqwrqqjl7elfk03yv6e5hwng08lm6xaglefh")
+    Bucket("bucket")
+;
+CALL_METHOD
+    Address("component_tdx_2_1cr8y0cctj5fg7vnr4u7qmpns37dpxvxk0n22vadz98x4ur5wf44gvs")
+    "breed"
+    Bucket("bucket")
+;
+CALL_METHOD
+    Address("account_tdx_2_128h3tgatzl2enh3k5ytnxxrea835f2jjt8dwk329fjwxzf02fn96dt")
+    "deposit_batch"
+    Expression("ENTIRE_WORKTOP")
+;

@@ -62,6 +62,7 @@ mod stake_pool {
             deposit_reward_pool => PUBLIC;
             create_id => PUBLIC;
             withdraw_reward_pool => restrict_to: [OWNER];
+            withdraw_all_reward_pool => restrict_to: [OWNER];
             update_reward_factor => restrict_to: [OWNER];
             update_reward_address => restrict_to: [OWNER];
         }
@@ -70,7 +71,8 @@ mod stake_pool {
     struct StakePool {
         // Define what resources and data will be managed by StakePool components
         nft_vault: NonFungibleVault,
-        reward_vault: Vault,
+        cnt: u64,
+        reward_vault: Vec<Vault>,
         reward_factor: Decimal,
         id_manager: ResourceManager,
         id_counter: u64,
@@ -118,10 +120,11 @@ mod stake_pool {
             // Instantiate our component
             let component = Self {
                 nft_vault: NonFungibleVault::new(nft_address),
-                reward_vault: Vault::new(reward_address),
+                reward_vault: vec![Vault::new(reward_address)],
                 reward_factor: dec!(5.0),
                 id_manager,
                 id_counter: 0,
+                cnt: 0,
                 current_period: 0,
             }
             .instantiate()
@@ -133,7 +136,7 @@ mod stake_pool {
         }
 
         pub fn deposit_reward_pool(&mut self, payment: Bucket) {
-            self.reward_vault.put(payment);
+            self.reward_vault[0].put(payment);
         }
 
         pub fn create_id(&mut self) -> Bucket {
@@ -155,11 +158,7 @@ mod stake_pool {
             id
         }
 
-        pub fn stake(
-            &mut self,
-            payment: NonFungibleBucket,
-            id_proof: NonFungibleProof,
-        ) {
+        pub fn stake(&mut self, payment: NonFungibleBucket, id_proof: NonFungibleProof) {
             let id: NonFungibleLocalId;
 
             let id_proof =
@@ -177,6 +176,7 @@ mod stake_pool {
 
             nfts.insert(payment.non_fungible::<WaterBear>().local_id().clone());
             self.nft_vault.put(payment);
+            self.cnt += 1;
 
             self.id_manager.update_non_fungible_data(&id, "nfts", nfts);
         }
@@ -197,6 +197,7 @@ mod stake_pool {
 
             nfts.remove(&nft_id);
             let nft_payment = self.nft_vault.take_non_fungible(&nft_id);
+            self.cnt -= 1;
 
             self.id_manager.update_non_fungible_data(&id, "nfts", nfts);
 
@@ -212,7 +213,7 @@ mod stake_pool {
 
             let id_data: Id = self.id_manager.get_non_fungible_data(&id);
 
-            let reward_payment = self.reward_vault.take(id_data.reward_amount);
+            let reward_payment = self.reward_vault[0].take(id_data.reward_amount);
 
             self.id_manager
                 .update_non_fungible_data(&id, "reward_amount", dec!(0));
@@ -222,11 +223,16 @@ mod stake_pool {
 
         pub fn withdraw_reward_pool(&mut self, amount: Decimal) -> Bucket {
             assert!(
-                amount < self.reward_vault.amount(),
+                amount < self.reward_vault[0].amount(),
                 "Withdrawal amount exceeds vault supply!, supply: {:?} but withdrawal amount: {amount}",
-                self.reward_vault.amount()
+                self.reward_vault[0].amount()
             );
-            let reward_payment = self.reward_vault.take(amount);
+            let reward_payment = self.reward_vault[0].take(amount);
+            return reward_payment;
+        }
+
+        pub fn withdraw_all_reward_pool(&mut self) -> Bucket {
+            let reward_payment = self.reward_vault[0].take_all();
             return reward_payment;
         }
 
@@ -235,7 +241,12 @@ mod stake_pool {
         }
 
         pub fn update_reward_address(&mut self, reward_address: ResourceAddress) {
-            self.reward_vault = Vault::new(reward_address);
+            assert!(self.reward_vault[0].is_empty(), "Vault is not empty",);
+            let address = self.reward_vault[0].resource_address();
+            self.reward_vault.push(Vault::new(reward_address));
+            self.reward_vault.rotate_right(1);
+            let address_after = self.reward_vault[0].resource_address();
+            assert!(address != address_after, "Something wrong",);
         }
 
         fn recal_reward(&mut self, id: &NonFungibleLocalId) {

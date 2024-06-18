@@ -70,67 +70,67 @@ fn test_hello() {
     )
     .unwrap();
 
-    // let network = &NetworkDefinition::mainnet();
-    // let net_decoder = AddressBech32Decoder::new(network);
-    // let account_component = ComponentAddress::try_from_bech32(
-    //     &net_decoder,
-    //     "account_tdx_2_12y02z98matcdkewlqd2jhckvwfkl9r4lqhmfcmq07cfdcx4qx5rex9",
-    // )
-    // .unwrap();
-    // let buy_account_component = ComponentAddress::try_from_bech32(
-    //     &net_decoder,
-    //     "account_tdx_2_128h3tgatzl2enh3k5ytnxxrea835f2jjt8dwk329fjwxzf02fn96dt",
-    // )
-    // .unwrap();
+    let network = &NetworkDefinition::mainnet();
+    let net_decoder = AddressBech32Decoder::new(network);
+    let account_component = ComponentAddress::try_from_bech32(
+        &net_decoder,
+        "account_rdx129qmwg7xtcqsegd0zpulw3wpdpp7c4xmrwcssy2jt095827lls6rtq",
+    )
+    .unwrap();
+    let buy_account_component = ComponentAddress::try_from_bech32(
+        &net_decoder,
+        "account_rdx12930ndfh8spce8fxw0rm5wrfvkgqkl5hv27un0vqnmc76xu6k44kx4",
+    )
+    .unwrap();
 
-    // let package_address = PackageAddress::try_from_bech32(
-    //     &net_decoder,
-    //     "package_tdx_2_1p5tnjevtetwpupam8jzdgkt0xe7x38c7c2dukrqpwmnhuxc9ncm95c",
-    // )
-    // .unwrap();
+    let package_address = PackageAddress::try_from_bech32(
+        &net_decoder,
+        "package_rdx1p4zth52zxmm5jzdq0u9952h578xvjglksfu9n7ank3gvlxsfcglynr",
+    )
+    .unwrap();
 
-    // let water_bear_component = ComponentAddress::try_from_bech32(
-    //     &net_decoder,
-    //     "component_tdx_2_1crlhtxmur02mz25ly9g682z00daxw0nrlkr6vj0jccdntpkrg4r5ap",
-    // )
-    // .unwrap();
-    // let owner_badge: ResourceAddress = ResourceAddress::try_from_bech32(
-    //     &net_decoder,
-    //     "resource_tdx_2_1t5x73kmmck9srd4u7f48wp849929dakyydusz6qk4tths2zznj9gw4",
-    // )
-    // .unwrap();
-    // let water_bear_resource = ResourceAddress::try_from_bech32(
-    //     &net_decoder,
-    //     "resource_tdx_2_1n2k6qtnlvl65dhhlf45sjn5uwzxmf7ny9qnezv7v8c47pyhvtua7y9",
-    // )
-    // .unwrap();
+    let water_bear_component = ComponentAddress::try_from_bech32(
+        &net_decoder,
+        "component_rdx1czkg9u5ap0dpdklz9llqq6arer2ned5jj06y7dweu6yj9m0u9ejys2",
+    )
+    .unwrap();
+    let owner_badge: ResourceAddress = ResourceAddress::try_from_bech32(
+        &net_decoder,
+        "resource_rdx1t506yl9nqyw90h9gxx323t67r2p99thssu3atwsnwum4l68t3uf9jv",
+    )
+    .unwrap();
+    let water_bear_resource = ResourceAddress::try_from_bech32(
+        &net_decoder,
+        "resource_rdx1nguyesjve2e0wql8d9cepx7u63jtevdg05a7n5fc5m767mn4vkxpeq",
+    )
+    .unwrap();
 
-    // let stake_pool_component = ComponentAddress::try_from_bech32(
-    //     &net_decoder,
-    //     "component_tdx_2_1crqntmap3fztduqaxug0ne3xzwd2mpf2yn9uvp9y65jaslz8jvjz0v",
-    // )
-    // .unwrap();
-    // let id_resource = ResourceAddress::try_from_bech32(
-    //     &net_decoder,
-    //     "resource_tdx_2_1ntr9s8ea8m6k5dqe6hlw8wh9cl9vpjf37me7upsc33paws5s9j6hug",
-    // )
-    // .unwrap();
-    // let dna_token = ResourceAddress::try_from_bech32(
-    //     &net_decoder,
-    //     "resource_tdx_2_1th9lefh8vkxc428kthlneedvrytvnxcm20hgjrhjts0sklc650j0z5",
-    // )
-    // .unwrap();
+    let stake_pool_component = ComponentAddress::try_from_bech32(
+        &net_decoder,
+        "component_rdx1cqthlhz89njtzgp6zrmm93dyej3ll2fq6yrq0yfj2j99d7tpsxtgc7",
+    )
+    .unwrap();
+    let id_resource = ResourceAddress::try_from_bech32(
+        &net_decoder,
+        "resource_rdx1ng5tup3hhugln0ajlu3pdvl6t7l26qe2laz9wkfatxwkp6rpe0vdf4",
+    )
+    .unwrap();
+    let dna_token = ResourceAddress::try_from_bech32(
+        &net_decoder,
+        "resource_rdx1th9txt2hxdlc740ypf9uj8ghgwwmhf7wdnxafhxa3uxmmus56nusxs",
+    )
+    .unwrap();
 
-    // let test_tube_component = ComponentAddress::try_from_bech32(
-    //     &net_decoder,
-    //     "component_tdx_2_1cqcdpckfc5h9ym9wtwp3wr6tkys0cckw6eap3qawur5fv5wn8hak65",
-    // )
-    // .unwrap();
-    // let test_tube_nft = ResourceAddress::try_from_bech32(
-    //     &net_decoder,
-    //     "resource_tdx_2_1ngpva0vcqfkylq4qhuxqwrqqjl7elfk03yv6e5hwng08lm6xaglefh",
-    // )
-    // .unwrap();
+    let test_tube_component = ComponentAddress::try_from_bech32(
+        &net_decoder,
+        "component_rdx1cztegh0j733zgv452uhe4avthvxu5ld00fer77awt05a87h98zkkn8",
+    )
+    .unwrap();
+    let test_tube_nft = ResourceAddress::try_from_bech32(
+        &net_decoder,
+        "resource_rdx1n2e6jk57z6dde2e4f6zleju7rgawdya2jzvtgkr5kv6cz5j64uu780",
+    )
+    .unwrap();
     // let baby_component = ComponentAddress::try_from_bech32(
     //     &net_decoder,
     //     "component_tdx_2_1cr8y0cctj5fg7vnr4u7qmpns37dpxvxk0n22vadz98x4ur5wf44gvs",
@@ -286,45 +286,32 @@ fn test_hello() {
 
     // stake nft
     let manifest = ManifestBuilder::new()
+        .lock_fee_from_faucet()
         .create_proof_from_account_of_non_fungibles(
-            buy_account_component,
+            account_component,
             id_resource,
             indexset!(NonFungibleLocalId::integer(1)),
         )
         .pop_from_auth_zone("proof_1")
-        .withdraw_non_fungible_from_account(
-            buy_account_component,
-            NonFungibleGlobalId::new(
-                water_bear_resource,
-                NonFungibleLocalId::String(StringNonFungibleLocalId::new("WaterBear_1").unwrap()),
-            ),
-        )
-        .take_all_from_worktop(water_bear_resource, "nft_bucket_1")
-        .call_method_with_name_lookup(stake_pool_component, "stake", |lookup| {
-            (lookup.bucket("nft_bucket_1"), lookup.proof("proof_1"))
+        .call_method_with_name_lookup(stake_pool_component, "withdraw", |lookup| {
+            (
+                indexset!(
+                    NonFungibleLocalId::String(
+                        StringNonFungibleLocalId::new("WaterBear_1").unwrap()
+                    ),
+                    NonFungibleLocalId::String(
+                        StringNonFungibleLocalId::new("WaterBear_2").unwrap()
+                    )
+                ),
+                lookup.proof("proof_1"),
+            )
         })
-        .create_proof_from_account_of_non_fungibles(
-            buy_account_component,
-            id_resource,
-            indexset!(NonFungibleLocalId::integer(1)),
-        )
-        .pop_from_auth_zone("proof_2")
-        .withdraw_non_fungible_from_account(
-            buy_account_component,
-            NonFungibleGlobalId::new(
-                water_bear_resource,
-                NonFungibleLocalId::String(StringNonFungibleLocalId::new("WaterBear_2").unwrap()),
-            ),
-        )
-        .take_all_from_worktop(water_bear_resource, "nft_bucket_2")
-        .call_method_with_name_lookup(stake_pool_component, "stake", |lookup| {
-            (lookup.bucket("nft_bucket_2"), lookup.proof("proof_2"))
-        });
+        .deposit_batch(account_component);
     let _ = dump_manifest_to_file_system(
         manifest.object_names(),
         &manifest.build(),
         "./transaction_manifest",
-        Some("10. nft"),
+        Some("10. stake nft"),
         network,
     );
 
@@ -362,31 +349,27 @@ fn test_hello() {
 
     // withdraw
     let manifest = ManifestBuilder::new()
+        .lock_fee_from_faucet()
         .create_proof_from_account_of_non_fungibles(
-            buy_account_component,
+            account_component,
             id_resource,
             indexset!(NonFungibleLocalId::integer(1)),
         )
         .pop_from_auth_zone("proof_1")
         .call_method_with_name_lookup(stake_pool_component, "withdraw", |lookup| {
             (
-                NonFungibleLocalId::String(StringNonFungibleLocalId::new("WaterBear_1").unwrap()),
+                indexset!(
+                    NonFungibleLocalId::String(
+                        StringNonFungibleLocalId::new("WaterBear_1").unwrap()
+                    ),
+                    NonFungibleLocalId::String(
+                        StringNonFungibleLocalId::new("WaterBear_2").unwrap()
+                    )
+                ),
                 lookup.proof("proof_1"),
             )
         })
-        .create_proof_from_account_of_non_fungibles(
-            buy_account_component,
-            id_resource,
-            indexset!(NonFungibleLocalId::integer(1)),
-        )
-        .pop_from_auth_zone("proof_2")
-        .call_method_with_name_lookup(stake_pool_component, "withdraw", |lookup| {
-            (
-                NonFungibleLocalId::String(StringNonFungibleLocalId::new("WaterBear_2").unwrap()),
-                lookup.proof("proof_2"),
-            )
-        })
-        .deposit_batch(buy_account_component);
+        .deposit_batch(account_component);
     let _ = dump_manifest_to_file_system(
         manifest.object_names(),
         &manifest.build(),
@@ -580,6 +563,46 @@ fn test_hello() {
         &manifest.build(),
         "./transaction_manifest",
         Some("24. breed"),
+        network,
+    );
+
+    // custom
+    let manifest = ManifestBuilder::new()
+        .create_proof_from_account_of_amount(account_component, owner_badge, dec!(1))
+        .set_role(
+            water_bear_resource,
+            ObjectModuleId::Main,
+            RoleKey::from("non_fungible_data_updater"),
+            rule!(require(owner_badge)),
+        );
+    let _ = dump_manifest_to_file_system(
+        manifest.object_names(),
+        &manifest.build(),
+        "./transaction_manifest",
+        Some("25. custom_1"),
+        network,
+    );
+
+    // custom
+    let manifest = ManifestBuilder::new()
+        .create_proof_from_account_of_amount(account_component, owner_badge, dec!(1))
+        .update_non_fungible_data(
+            water_bear_resource,
+            NonFungibleLocalId::String(StringNonFungibleLocalId::new("WaterBear_1").unwrap()),
+            "key_image_url",
+            "https://arweave.net/A1UgVPZYbv7d0ymltAHAP8KLTvNgb34CnT8DFQYyH80",
+        )
+        .update_non_fungible_data(
+            water_bear_resource,
+            NonFungibleLocalId::String(StringNonFungibleLocalId::new("WaterBear_2").unwrap()),
+            "key_image_url",
+            "https://arweave.net/fKLXKQeYYNRXAtRwelJ4hydWAayDA9Krv3D4DklhlM0",
+        );
+    let _ = dump_manifest_to_file_system(
+        manifest.object_names(),
+        &manifest.build(),
+        "./transaction_manifest",
+        Some("26. custom_2"),
         network,
     );
 }

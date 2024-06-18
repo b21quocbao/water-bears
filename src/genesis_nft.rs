@@ -60,6 +60,9 @@ mod meme_nft {
             withdraw_from_vault => restrict_to: [OWNER];
             buy_nft => PUBLIC;
             withdraw_nft => restrict_to: [OWNER, admin];
+            mint_baby_nft => restrict_to: [OWNER, admin];
+            breed => PUBLIC;
+            update_test_tube => restrict_to: [OWNER, admin];
         }
     }
 
@@ -68,6 +71,9 @@ mod meme_nft {
         nft_resource_manager: ResourceManager,
         nft_info: NftInfo,
         bought_nfts: Vec<Decimal>,
+        test_tube_address: ResourceAddress,
+        baby_supply: Decimal,
+        baby_current: Decimal,
     }
 
     impl MemeNft {
@@ -118,6 +124,9 @@ mod meme_nft {
                     buy_infos: vec![],
                 },
                 bought_nfts: vec![],
+                test_tube_address: owner_badge.resource_address(),
+                baby_current: dec!(1),
+                baby_supply: dec!(0),
             }
             .instantiate()
             .prepare_to_globalize(owner_role)
@@ -265,6 +274,74 @@ mod meme_nft {
 
             let actual_payment = buy_info.vault.take(buy_info.vault.amount());
             return actual_payment;
+        }
+
+        pub fn mint_baby_nft(
+            &mut self,
+            id: Vec<Decimal>,
+            key_image_url: Vec<String>,
+            background: Vec<String>,
+            base: Vec<String>,
+            mouth: Vec<String>,
+            hats: Vec<String>,
+            neck: Vec<String>,
+            eyes: Vec<String>,
+            clothes: Vec<String>,
+        ) {
+            for i in 0..id.len() {
+                assert!(id[i] == self.baby_supply + 1, "Id not match!");
+                let ticket = self.nft_resource_manager.mint_non_fungible(
+                    &NonFungibleLocalId::String(
+                        StringNonFungibleLocalId::new(format!("BabyWaterBear_{}", id[i])).unwrap(),
+                    ),
+                    WaterBear {
+                        name: String::from(format!("BabyWaterBear #{}", id[i])),
+                        key_image_url: Url::of(key_image_url[i].clone()),
+                        background: background[i].clone(),
+                        base: base[i].clone(),
+                        mouth: mouth[i].clone(),
+                        hats: hats[i].clone(),
+                        neck: neck[i].clone(),
+                        eyes: eyes[i].clone(),
+                        clothes: clothes[i].clone(),
+                    },
+                );
+                self.nft_info.vault.put(ticket.as_non_fungible());
+
+                self.baby_supply += 1;
+            }
+        }
+
+        pub fn breed(&mut self, payment: NonFungibleBucket) -> Vec<NonFungibleBucket> {
+            assert_eq!(
+                payment.resource_address(),
+                self.test_tube_address,
+                "Only test tube are accepted as payments!"
+            );
+
+            let mut nfts = Vec::<NonFungibleBucket>::new();
+
+            for _ in 0..i32::try_from(payment.amount()).unwrap() {
+                let nft = self
+                    .nft_info
+                    .vault
+                    .take_non_fungible(&NonFungibleLocalId::String(
+                        StringNonFungibleLocalId::new(format!(
+                            "BabyWaterBear_{}",
+                            self.baby_current
+                        ))
+                        .unwrap(),
+                    ));
+                self.baby_current += 1;
+                nfts.push(nft);
+            }
+            payment.burn();
+
+            return nfts;
+        }
+
+        pub fn update_test_tube(&mut self, test_tube_address: ResourceAddress) {
+            self.test_tube_address = test_tube_address;
         }
     }
 }

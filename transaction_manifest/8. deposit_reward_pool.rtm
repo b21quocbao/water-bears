@@ -1,15 +1,15 @@
 CALL_METHOD
-    Address("account_tdx_2_12y02z98matcdkewlqd2jhckvwfkl9r4lqhmfcmq07cfdcx4qx5rex9")
+    Address("account_rdx129qmwg7xtcqsegd0zpulw3wpdpp7c4xmrwcssy2jt095827lls6rtq")
     "withdraw"
-    Address("resource_tdx_2_1th9lefh8vkxc428kthlneedvrytvnxcm20hgjrhjts0sklc650j0z5")
+    Address("resource_rdx1th9txt2hxdlc740ypf9uj8ghgwwmhf7wdnxafhxa3uxmmus56nusxs")
     Decimal("250")
 ;
 TAKE_ALL_FROM_WORKTOP
-    Address("resource_tdx_2_1th9lefh8vkxc428kthlneedvrytvnxcm20hgjrhjts0sklc650j0z5")
+    Address("resource_rdx1th9txt2hxdlc740ypf9uj8ghgwwmhf7wdnxafhxa3uxmmus56nusxs")
     Bucket("bucket")
 ;
 CALL_METHOD
-    Address("component_tdx_2_1crqntmap3fztduqaxug0ne3xzwd2mpf2yn9uvp9y65jaslz8jvjz0v")
+    Address("component_rdx1cpg2g2nx5jm20ykyqheymuzs2wvulhn5qlpvhd6q4958vfj6gaa2yh")
     "deposit_reward_pool"
     Bucket("bucket")
 ;

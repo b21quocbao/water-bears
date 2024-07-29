@@ -38,10 +38,11 @@ mod breed_nft {
             buy_nft => PUBLIC;
             update_genesis => restrict_to: [OWNER, admin];
             update_dna_amount => restrict_to: [OWNER, admin];
+            update_supply => restrict_to: [OWNER, admin];
         }
     }
 
-    struct BreedNft {
+    struct NewBreedNft {
         // Define what resources and data will be managed by Breed components
         nft_resource_manager: ResourceManager,
         nft_info: NftInfo,
@@ -50,44 +51,21 @@ mod breed_nft {
         dna_amount: Decimal,
     }
 
-    impl BreedNft {
+    impl NewBreedNft {
         pub fn instantiate_breed_nft(
             owner_badge: ResourceAddress,
             genesis_address: ResourceAddress,
             genesis_amount: Decimal,
-        ) -> Global<BreedNft> {
+            test_tube_address: ResourceAddress
+        ) -> Global<NewBreedNft> {
             // Create role badge
-            let (address_reservation, component_address) =
-                Runtime::allocate_component_address(BreedNft::blueprint_id());
+            let (address_reservation, _) =
+                Runtime::allocate_component_address(NewBreedNft::blueprint_id());
             let owner_role = OwnerRole::Fixed(rule!(require(owner_badge)));
-
-            // Creates a no supply of NFTs.
-            let nft_resource_manager = ResourceBuilder::new_string_non_fungible::<TestTube>(owner_role.clone())
-            .metadata(metadata!(
-                init {
-                    "name" => "Test Tube", updatable;
-                    "description" => "Each Test Tube Can Be Minted Into A Baby WaterBear.", updatable;
-                    "icon_url" => Url::of("https://arweave.net/NRuOPWPHQ3tdV-DXaFDQapnf0npMfR7FA5o5dBkkHDY"), updatable;
-                    "tags" => vec!["nft", "breed"], updatable;
-                }
-            ))
-            .non_fungible_data_update_roles(non_fungible_data_update_roles!(
-                non_fungible_data_updater => rule!(require(global_caller(component_address)));
-                non_fungible_data_updater_updater => rule!(require(owner_badge));
-                ))
-            .mint_roles(mint_roles!(
-                minter => rule!(require(global_caller(component_address)));
-                minter_updater => rule!(require(owner_badge));
-                ))
-            .burn_roles(burn_roles!(
-                burner => rule!(require(global_caller(component_address)));
-                burner_updater => rule!(require(owner_badge));
-                ))
-                .create_with_no_initial_supply();
 
             // Instantiate our component
             let component = Self {
-                nft_resource_manager,
+                nft_resource_manager: ResourceManager::from_address(test_tube_address),
                 nft_info: NftInfo {
                     supply: dec!(0),
                     buy_infos: vec![],
@@ -177,6 +155,10 @@ mod breed_nft {
 
         pub fn update_dna_amount(&mut self, dna_amount: Decimal) {
             self.dna_amount = dna_amount;
+        }
+        
+        pub fn update_supply(&mut self, supply: Decimal) {
+            self.nft_info.supply = supply;
         }
     }
 }

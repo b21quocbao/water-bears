@@ -1,5 +1,5 @@
 CALL_METHOD
-    Address("account_rdx12930ndfh8spce8fxw0rm5wrfvkgqkl5hv27un0vqnmc76xu6k44kx4")
+    Address("account_rdx129qmwg7xtcqsegd0zpulw3wpdpp7c4xmrwcssy2jt095827lls6rtq")
     "withdraw"
     Address("resource_rdx1tknxxxxxxxxxradxrdxxxxxxxxx009923554798xxxxxxxxxradxrd")
     Decimal("750")
@@ -9,13 +9,13 @@ TAKE_ALL_FROM_WORKTOP
     Bucket("nft_bucket_1")
 ;
 CALL_METHOD
-    Address("component_rdx1czkg9u5ap0dpdklz9llqq6arer2ned5jj06y7dweu6yj9m0u9ejys2")
+    Address("component_rdx1czqx3kux3t2fgsaafufudc3626gdwn7e3fj62s6fzl2ukzu8xzu6kf")
     "buy_nft"
     Bucket("nft_bucket_1")
     Decimal("3")
 ;
 CALL_METHOD
-    Address("account_rdx12930ndfh8spce8fxw0rm5wrfvkgqkl5hv27un0vqnmc76xu6k44kx4")
+    Address("account_rdx129qmwg7xtcqsegd0zpulw3wpdpp7c4xmrwcssy2jt095827lls6rtq")
     "deposit_batch"
     Expression("ENTIRE_WORKTOP")
 ;

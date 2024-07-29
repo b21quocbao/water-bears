@@ -5,7 +5,8 @@ CALL_METHOD
     Decimal("1")
 ;
 CALL_METHOD
-    Address("component_rdx1cpg2g2nx5jm20ykyqheymuzs2wvulhn5qlpvhd6q4958vfj6gaa2yh")
-    "update_reward_address"
-    Address("resource_rdx1tknxxxxxxxxxradxrdxxxxxxxxx009923554798xxxxxxxxxradxrd")
+    Address("component_rdx1cp0yra6p000xhwf0eyd3aa8pdyyqgqjcrvq4rkkh76h22su6z2j9p9")
+    "update_payment"
+    Address("resource_rdx1th9txt2hxdlc740ypf9uj8ghgwwmhf7wdnxafhxa3uxmmus56nusxs")
+    Decimal("300")
 ;

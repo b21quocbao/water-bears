@@ -174,16 +174,19 @@ mod stake_pool {
             let id_data: Id = self.id_manager.get_non_fungible_data(&id);
             let mut nfts = id_data.nfts;
 
-            nfts.insert(payment.non_fungible::<WaterBear>().local_id().clone());
-            self.nft_vault.put(payment);
-            self.cnt += 1;
+            let non_fungibles = payment.non_fungibles::<WaterBear>();
+            for non_fungible in non_fungibles.iter() {
+                nfts.insert(non_fungible.local_id().clone());
+                self.cnt += 1;
+            }
 
+            self.nft_vault.put(payment);
             self.id_manager.update_non_fungible_data(&id, "nfts", nfts);
         }
 
         pub fn withdraw(
             &mut self,
-            nft_id: NonFungibleLocalId,
+            nft_ids: IndexSet<NonFungibleLocalId>,
             id_proof: NonFungibleProof,
         ) -> NonFungibleBucket {
             let id_proof =
@@ -195,11 +198,14 @@ mod stake_pool {
             let id_data: Id = self.id_manager.get_non_fungible_data(&id);
             let mut nfts = id_data.nfts;
 
-            nfts.remove(&nft_id);
-            let nft_payment = self.nft_vault.take_non_fungible(&nft_id);
-            self.cnt -= 1;
+            for nft_id in nft_ids.iter() {
+                assert!(nfts.contains(&nft_id), "Withdrawer not the NFT owner");
+                nfts.remove(&nft_id);
+                self.cnt -= 1;
+            }
 
             self.id_manager.update_non_fungible_data(&id, "nfts", nfts);
+            let nft_payment = self.nft_vault.take_non_fungibles(&nft_ids);
 
             return nft_payment;
         }

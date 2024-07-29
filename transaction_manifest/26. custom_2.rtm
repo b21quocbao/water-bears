@@ -1,0 +1,20 @@
+CALL_METHOD
+    Address("account_rdx129qmwg7xtcqsegd0zpulw3wpdpp7c4xmrwcssy2jt095827lls6rtq")
+    "create_proof_of_amount"
+    Address("resource_rdx1t506yl9nqyw90h9gxx323t67r2p99thssu3atwsnwum4l68t3uf9jv")
+    Decimal("1")
+;
+CALL_METHOD
+    Address("resource_rdx1nguyesjve2e0wql8d9cepx7u63jtevdg05a7n5fc5m767mn4vkxpeq")
+    "update_non_fungible_data"
+    NonFungibleLocalId("<WaterBear_1>")
+    "key_image_url"
+    "https://arweave.net/A1UgVPZYbv7d0ymltAHAP8KLTvNgb34CnT8DFQYyH80"
+;
+CALL_METHOD
+    Address("resource_rdx1nguyesjve2e0wql8d9cepx7u63jtevdg05a7n5fc5m767mn4vkxpeq")
+    "update_non_fungible_data"
+    NonFungibleLocalId("<WaterBear_2>")
+    "key_image_url"
+    "https://arweave.net/fKLXKQeYYNRXAtRwelJ4hydWAayDA9Krv3D4DklhlM0"
+;

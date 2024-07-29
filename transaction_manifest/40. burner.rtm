@@ -5,7 +5,7 @@ CALL_METHOD
     Decimal("1")
 ;
 SET_ROLE
-    Address("resource_rdx1n2e6jk57z6dde2e4f6zleju7rgawdya2jzvtgkr5kv6cz5j64uu780")
+    Address("resource_rdx1nguyesjve2e0wql8d9cepx7u63jtevdg05a7n5fc5m767mn4vkxpeq")
     Enum<0u8>()
     "burner"
     Enum<2u8>(

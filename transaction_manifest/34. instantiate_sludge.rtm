@@ -1,9 +1,8 @@
 CALL_FUNCTION
     Address("package_rdx1pk8cnsvttsc2dc6v77tma5ztwf4760l0a06utwzzkjpe8twc2k234w")
-    "BabyNft"
-    "instantiate_baby_nft"
+    "SludgeNft"
+    "instantiate_sludge"
     Address("resource_rdx1t506yl9nqyw90h9gxx323t67r2p99thssu3atwsnwum4l68t3uf9jv")
-    Address("resource_rdx1n2e6jk57z6dde2e4f6zleju7rgawdya2jzvtgkr5kv6cz5j64uu780")
 ;
 CALL_METHOD
     Address("account_rdx129qmwg7xtcqsegd0zpulw3wpdpp7c4xmrwcssy2jt095827lls6rtq")

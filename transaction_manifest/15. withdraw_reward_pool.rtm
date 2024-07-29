@@ -1,16 +1,16 @@
 CALL_METHOD
-    Address("account_tdx_2_12y02z98matcdkewlqd2jhckvwfkl9r4lqhmfcmq07cfdcx4qx5rex9")
+    Address("account_rdx129qmwg7xtcqsegd0zpulw3wpdpp7c4xmrwcssy2jt095827lls6rtq")
     "create_proof_of_amount"
-    Address("resource_tdx_2_1t5x73kmmck9srd4u7f48wp849929dakyydusz6qk4tths2zznj9gw4")
+    Address("resource_rdx1t506yl9nqyw90h9gxx323t67r2p99thssu3atwsnwum4l68t3uf9jv")
     Decimal("1")
 ;
 CALL_METHOD
-    Address("component_tdx_2_1crqntmap3fztduqaxug0ne3xzwd2mpf2yn9uvp9y65jaslz8jvjz0v")
+    Address("component_rdx1cpg2g2nx5jm20ykyqheymuzs2wvulhn5qlpvhd6q4958vfj6gaa2yh")
     "withdraw_reward_pool"
     Decimal("210")
 ;
 CALL_METHOD
-    Address("account_tdx_2_12y02z98matcdkewlqd2jhckvwfkl9r4lqhmfcmq07cfdcx4qx5rex9")
+    Address("account_rdx129qmwg7xtcqsegd0zpulw3wpdpp7c4xmrwcssy2jt095827lls6rtq")
     "deposit_batch"
     Expression("ENTIRE_WORKTOP")
 ;

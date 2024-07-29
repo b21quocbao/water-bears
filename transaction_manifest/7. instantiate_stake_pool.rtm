@@ -1,13 +1,13 @@
 CALL_FUNCTION
-    Address("package_tdx_2_1p5tnjevtetwpupam8jzdgkt0xe7x38c7c2dukrqpwmnhuxc9ncm95c")
+    Address("package_rdx1pk8cnsvttsc2dc6v77tma5ztwf4760l0a06utwzzkjpe8twc2k234w")
     "StakePool"
     "instantiate_stake_pool"
-    Address("resource_tdx_2_1n2k6qtnlvl65dhhlf45sjn5uwzxmf7ny9qnezv7v8c47pyhvtua7y9")
-    Address("resource_tdx_2_1t5x73kmmck9srd4u7f48wp849929dakyydusz6qk4tths2zznj9gw4")
-    Address("resource_tdx_2_1th9lefh8vkxc428kthlneedvrytvnxcm20hgjrhjts0sklc650j0z5")
+    Address("resource_rdx1nguyesjve2e0wql8d9cepx7u63jtevdg05a7n5fc5m767mn4vkxpeq")
+    Address("resource_rdx1t506yl9nqyw90h9gxx323t67r2p99thssu3atwsnwum4l68t3uf9jv")
+    Address("resource_rdx1th9txt2hxdlc740ypf9uj8ghgwwmhf7wdnxafhxa3uxmmus56nusxs")
 ;
 CALL_METHOD
-    Address("account_tdx_2_12y02z98matcdkewlqd2jhckvwfkl9r4lqhmfcmq07cfdcx4qx5rex9")
+    Address("account_rdx129qmwg7xtcqsegd0zpulw3wpdpp7c4xmrwcssy2jt095827lls6rtq")
     "deposit_batch"
     Expression("ENTIRE_WORKTOP")
 ;

@@ -5,14 +5,14 @@ CALL_METHOD
     Decimal("1")
 ;
 SET_ROLE
-    Address("resource_rdx1n2e6jk57z6dde2e4f6zleju7rgawdya2jzvtgkr5kv6cz5j64uu780")
+    Address("resource_rdx1nguyesjve2e0wql8d9cepx7u63jtevdg05a7n5fc5m767mn4vkxpeq")
     Enum<0u8>()
-    "burner"
+    "non_fungible_data_updater"
     Enum<2u8>(
         Enum<0u8>(
             Enum<0u8>(
-                Enum<0u8>(
-                    NonFungibleGlobalId("resource_rdx1nfxxxxxxxxxxglcllrxxxxxxxxx002350006550xxxxxxxxxglcllr:[833fcb0267503c879b78fb6728a22761ccb7ff57dd0b216920c9b27c0388a316]")
+                Enum<1u8>(
+                    Address("resource_rdx1t506yl9nqyw90h9gxx323t67r2p99thssu3atwsnwum4l68t3uf9jv")
                 )
             )
         )

@@ -1,8 +1,10 @@
 CALL_FUNCTION
     Address("package_rdx1pk8cnsvttsc2dc6v77tma5ztwf4760l0a06utwzzkjpe8twc2k234w")
-    "BabyNft"
-    "instantiate_baby_nft"
+    "NewBreedNft"
+    "instantiate_breed_nft"
     Address("resource_rdx1t506yl9nqyw90h9gxx323t67r2p99thssu3atwsnwum4l68t3uf9jv")
+    Address("resource_rdx1nguyesjve2e0wql8d9cepx7u63jtevdg05a7n5fc5m767mn4vkxpeq")
+    Decimal("2")
     Address("resource_rdx1n2e6jk57z6dde2e4f6zleju7rgawdya2jzvtgkr5kv6cz5j64uu780")
 ;
 CALL_METHOD

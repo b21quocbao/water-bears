@@ -1,23 +1,23 @@
 CALL_METHOD
-    Address("account_tdx_2_128h3tgatzl2enh3k5ytnxxrea835f2jjt8dwk329fjwxzf02fn96dt")
+    Address("account_rdx12930ndfh8spce8fxw0rm5wrfvkgqkl5hv27un0vqnmc76xu6k44kx4")
     "withdraw_non_fungibles"
-    Address("resource_tdx_2_1ngpva0vcqfkylq4qhuxqwrqqjl7elfk03yv6e5hwng08lm6xaglefh")
+    Address("resource_rdx1n2e6jk57z6dde2e4f6zleju7rgawdya2jzvtgkr5kv6cz5j64uu780")
     Array<NonFungibleLocalId>(
         NonFungibleLocalId("<TestTube_1>"),
         NonFungibleLocalId("<TestTube_2>")
     )
 ;
 TAKE_ALL_FROM_WORKTOP
-    Address("resource_tdx_2_1ngpva0vcqfkylq4qhuxqwrqqjl7elfk03yv6e5hwng08lm6xaglefh")
+    Address("resource_rdx1n2e6jk57z6dde2e4f6zleju7rgawdya2jzvtgkr5kv6cz5j64uu780")
     Bucket("bucket")
 ;
 CALL_METHOD
-    Address("component_tdx_2_1cr8y0cctj5fg7vnr4u7qmpns37dpxvxk0n22vadz98x4ur5wf44gvs")
+    Address("component_rdx1cr8y0cctj5fg7vnr4u7qmpns37dpxvxk0n22vadz98x4ur5wy5kxhy")
     "breed"
     Bucket("bucket")
 ;
 CALL_METHOD
-    Address("account_tdx_2_128h3tgatzl2enh3k5ytnxxrea835f2jjt8dwk329fjwxzf02fn96dt")
+    Address("account_rdx12930ndfh8spce8fxw0rm5wrfvkgqkl5hv27un0vqnmc76xu6k44kx4")
     "deposit_batch"
     Expression("ENTIRE_WORKTOP")
 ;

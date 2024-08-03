@@ -4,3 +4,4 @@ pub mod test_tube;
 pub mod new_test_tube;
 pub mod baby_nft;
 pub mod sludge;
+pub mod auction;

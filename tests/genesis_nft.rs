@@ -640,13 +640,102 @@ fn test() {
     // receipt.expect_commit_success();
     let owner_badge = XRD;
 
-    // Test the `instantiate_sludge` function.
+    // // Test the `instantiate_sludge` function.
+    // let manifest = ManifestBuilder::new()
+    //     .lock_fee_from_faucet()
+    //     .call_function(
+    //         package_address,
+    //         "SludgeNft",
+    //         "instantiate_sludge",
+    //         manifest_args!(owner_badge),
+    //     )
+    //     .deposit_batch(account_component)
+    //     .build();
+    // let receipt = ledger.execute_manifest(
+    //     manifest,
+    //     vec![NonFungibleGlobalId::from_public_key(&public_key)],
+    // );
+    // receipt.expect_commit_success();
+    // let water_bear_resource = receipt.expect_commit(true).new_resource_addresses()[0];
+    // let water_bear_component = receipt.expect_commit(true).new_component_addresses()[0];
+
+    // // update_payment
+    // let manifest = ManifestBuilder::new()
+    //     .lock_fee_from_faucet()
+    //     .create_proof_from_account_of_amount(account_component, owner_badge, dec!(1))
+    //     .call_method(water_bear_component, "update_payment", (XRD, dec!(250)))
+    //     .build();
+    // let receipt = ledger.execute_manifest(
+    //     manifest,
+    //     vec![NonFungibleGlobalId::from_public_key(&public_key)],
+    // );
+    // receipt.expect_commit_success();
+
+    // // mint_nft
+    // let manifest = ManifestBuilder::new()
+    //     .lock_fee_from_faucet()
+    //     .create_proof_from_account_of_amount(account_component, owner_badge, dec!(1))
+    //     .call_method(
+    //         water_bear_component,
+    //         "mint_nft",
+    //         ([dec!(1), dec!(2), dec!(3), dec!(4), dec!(5)],),
+    //     )
+    //     .build();
+    // let receipt = ledger.execute_manifest(
+    //     manifest,
+    //     vec![NonFungibleGlobalId::from_public_key(&public_key)],
+    // );
+    // receipt.expect_commit_success();
+
+    // // buy_nft
+    // let manifest = ManifestBuilder::new()
+    //     .lock_fee_from_faucet()
+    //     .withdraw_from_account(account_component, XRD, dec!(750))
+    //     .take_all_from_worktop(XRD, "nft_bucket_1")
+    //     .call_method_with_name_lookup(water_bear_component, "buy_nft", |lookup| {
+    //         (lookup.bucket("nft_bucket_1"), dec!(3))
+    //     })
+    //     .deposit_batch(account_component)
+    //     .build();
+    // let receipt = ledger.execute_manifest(
+    //     manifest,
+    //     vec![NonFungibleGlobalId::from_public_key(&public_key)],
+    // );
+    // receipt.expect_commit_success();
+
+    // // withdraw_nft
+    // let manifest = ManifestBuilder::new()
+    //     .lock_fee_from_faucet()
+    //     .create_proof_from_account_of_amount(account_component, owner_badge, dec!(1))
+    //     .call_method(water_bear_component, "withdraw_nft", (dec!(2),))
+    //     .deposit_batch(account_component)
+    //     .build();
+    // let receipt = ledger.execute_manifest(
+    //     manifest,
+    //     vec![NonFungibleGlobalId::from_public_key(&public_key)],
+    // );
+    // receipt.expect_commit_success();
+
+    // // withdraw_from_vault
+    // let manifest = ManifestBuilder::new()
+    //     .lock_fee_from_faucet()
+    //     .create_proof_from_account_of_amount(account_component, owner_badge, dec!(1))
+    //     .call_method(water_bear_component, "withdraw_from_vault", (XRD,))
+    //     .deposit_batch(account_component)
+    //     .build();
+    // let receipt = ledger.execute_manifest(
+    //     manifest,
+    //     vec![NonFungibleGlobalId::from_public_key(&public_key)],
+    // );
+    // receipt.expect_commit_success();
+
+    // Test the `instantiate_english_auction` function.
     let manifest = ManifestBuilder::new()
         .lock_fee_from_faucet()
         .call_function(
             package_address,
-            "SludgeNft",
-            "instantiate_sludge",
+            "EnglishAuction",
+            "instantiate_english_auction",
             manifest_args!(owner_badge),
         )
         .deposit_batch(account_component)
@@ -656,74 +745,13 @@ fn test() {
         vec![NonFungibleGlobalId::from_public_key(&public_key)],
     );
     receipt.expect_commit_success();
-    let water_bear_resource = receipt.expect_commit(true).new_resource_addresses()[0];
-    let water_bear_component = receipt.expect_commit(true).new_component_addresses()[0];
+    let english_auction_component = receipt.expect_commit(true).new_component_addresses()[0];
 
     // update_payment
     let manifest = ManifestBuilder::new()
         .lock_fee_from_faucet()
         .create_proof_from_account_of_amount(account_component, owner_badge, dec!(1))
-        .call_method(water_bear_component, "update_payment", (XRD, dec!(250)))
-        .build();
-    let receipt = ledger.execute_manifest(
-        manifest,
-        vec![NonFungibleGlobalId::from_public_key(&public_key)],
-    );
-    receipt.expect_commit_success();
-
-    // mint_nft
-    let manifest = ManifestBuilder::new()
-        .lock_fee_from_faucet()
-        .create_proof_from_account_of_amount(account_component, owner_badge, dec!(1))
-        .call_method(
-            water_bear_component,
-            "mint_nft",
-            (
-                [dec!(1), dec!(2), dec!(3), dec!(4), dec!(5)],
-            ),
-        )
-        .build();
-    let receipt = ledger.execute_manifest(
-        manifest,
-        vec![NonFungibleGlobalId::from_public_key(&public_key)],
-    );
-    receipt.expect_commit_success();
-
-    // buy_nft
-    let manifest = ManifestBuilder::new()
-        .lock_fee_from_faucet()
-        .withdraw_from_account(account_component, XRD, dec!(750))
-        .take_all_from_worktop(XRD, "nft_bucket_1")
-        .call_method_with_name_lookup(water_bear_component, "buy_nft", |lookup| {
-            (lookup.bucket("nft_bucket_1"), dec!(3))
-        })
-        .deposit_batch(account_component)
-        .build();
-    let receipt = ledger.execute_manifest(
-        manifest,
-        vec![NonFungibleGlobalId::from_public_key(&public_key)],
-    );
-    receipt.expect_commit_success();
-
-    // withdraw_nft
-    let manifest = ManifestBuilder::new()
-        .lock_fee_from_faucet()
-        .create_proof_from_account_of_amount(account_component, owner_badge, dec!(1))
-        .call_method(water_bear_component, "withdraw_nft", (dec!(2),))
-        .deposit_batch(account_component)
-        .build();
-    let receipt = ledger.execute_manifest(
-        manifest,
-        vec![NonFungibleGlobalId::from_public_key(&public_key)],
-    );
-    receipt.expect_commit_success();
-
-    // withdraw_from_vault
-    let manifest = ManifestBuilder::new()
-        .lock_fee_from_faucet()
-        .create_proof_from_account_of_amount(account_component, owner_badge, dec!(1))
-        .call_method(water_bear_component, "withdraw_from_vault", (XRD,))
-        .deposit_batch(account_component)
+        .call_method(english_auction_component, "update_payment", (XRD, dec!(250)))
         .build();
     let receipt = ledger.execute_manifest(
         manifest,

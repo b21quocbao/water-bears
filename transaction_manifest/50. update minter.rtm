@@ -1,0 +1,276 @@
+CALL_METHOD
+    Address("account_rdx129qmwg7xtcqsegd0zpulw3wpdpp7c4xmrwcssy2jt095827lls6rtq")
+    "create_proof_of_amount"
+    Address("resource_rdx1t506yl9nqyw90h9gxx323t67r2p99thssu3atwsnwum4l68t3uf9jv")
+    Decimal("1")
+;
+MINT_NON_FUNGIBLE
+    Address("resource_rdx1nguyesjve2e0wql8d9cepx7u63jtevdg05a7n5fc5m767mn4vkxpeq")
+    Map<NonFungibleLocalId, Tuple>(
+        NonFungibleLocalId("<WaterBearsDAO_1>") => Tuple(
+            Tuple(
+                "WaterBears DAO #1",
+                "https://arweave.net/RcELr8fbTER3aJ-HvHeBLaicCikU_xZiWfqZVnke2NI",
+                "",
+                "DAO",
+                "",
+                "",
+                "",
+                "",
+                ""
+            )
+        ),
+        NonFungibleLocalId("<WaterBearsDAO_2>") => Tuple(
+            Tuple(
+                "WaterBears DAO #2",
+                "https://arweave.net/mIwohfcO38JblFxJdrajFiVJVyhmgVYXNGsKSdf350w",
+                "",
+                "DAO",
+                "",
+                "",
+                "",
+                "",
+                ""
+            )
+        ),
+        NonFungibleLocalId("<WaterBearsDAO_3>") => Tuple(
+            Tuple(
+                "WaterBears DAO #3",
+                "https://arweave.net/Bdd5tNpZS6fbqYe3yFnUTLrgAnrlPfRRaN_BrWBPEdw",
+                "",
+                "DAO",
+                "",
+                "",
+                "",
+                "",
+                ""
+            )
+        ),
+        NonFungibleLocalId("<WaterBearsDAO_4>") => Tuple(
+            Tuple(
+                "WaterBears DAO #4",
+                "https://arweave.net/KVH6sbjLjultdcHbQHZSFliIL2i6Kpc8LX4JfEbau4c",
+                "",
+                "DAO",
+                "",
+                "",
+                "",
+                "",
+                ""
+            )
+        ),
+        NonFungibleLocalId("<WaterBearsDAO_5>") => Tuple(
+            Tuple(
+                "WaterBears DAO #5",
+                "https://arweave.net/AJWfAWQrmUFN3RJfR04FQj0qbka2no5vPwI9dMBUeG0",
+                "",
+                "DAO",
+                "",
+                "",
+                "",
+                "",
+                ""
+            )
+        ),
+        NonFungibleLocalId("<WaterBearsDAO_6>") => Tuple(
+            Tuple(
+                "WaterBears DAO #6",
+                "https://arweave.net/8pr2GbVdguq4DJ91f34MWLMl_xfXJzmyMZjW8pwe1fM",
+                "",
+                "DAO",
+                "",
+                "",
+                "",
+                "",
+                ""
+            )
+        ),
+        NonFungibleLocalId("<WaterBearsDAO_7>") => Tuple(
+            Tuple(
+                "WaterBears DAO #7",
+                "https://arweave.net/Nw3YS6GL6v3s9EuwLpowC7Q9HMrDcLupbiZds_vmilg",
+                "",
+                "DAO",
+                "",
+                "",
+                "",
+                "",
+                ""
+            )
+        ),
+        NonFungibleLocalId("<WaterBearsDAO_8>") => Tuple(
+            Tuple(
+                "WaterBears DAO #8",
+                "https://arweave.net/rCgqUIqBe2IU6H01132VTbpP1DRq-EYfkaZ2nZm7hg4",
+                "",
+                "DAO",
+                "",
+                "",
+                "",
+                "",
+                ""
+            )
+        ),
+        NonFungibleLocalId("<WaterBearsDAO_9>") => Tuple(
+            Tuple(
+                "WaterBears DAO #9",
+                "https://arweave.net/fNacoielqaAJ6ZhQPSol14q3MQ-Nsv3-HXtdB_l-Br8",
+                "",
+                "DAO",
+                "",
+                "",
+                "",
+                "",
+                ""
+            )
+        ),
+        NonFungibleLocalId("<WaterBearsDAO_10>") => Tuple(
+            Tuple(
+                "WaterBears DAO #10",
+                "https://arweave.net/TBGTMYdMeYtM4AP-oXQa16IAeFHMdx8UKbYaVRc9QiM",
+                "",
+                "DAO",
+                "",
+                "",
+                "",
+                "",
+                ""
+            )
+        ),
+        NonFungibleLocalId("<WaterBearsDAO_11>") => Tuple(
+            Tuple(
+                "WaterBears DAO #11",
+                "https://arweave.net/h5xdkNKLkeHwi9hr3zLrzvjkaDaJxSKFS-IAU7Jsn-Q",
+                "",
+                "DAO",
+                "",
+                "",
+                "",
+                "",
+                ""
+            )
+        ),
+        NonFungibleLocalId("<WaterBearsDAO_12>") => Tuple(
+            Tuple(
+                "WaterBears DAO #12",
+                "https://arweave.net/5mBodIfGsRmQQhfvD4poENvfe9P1Q2qYguvRfGRX258",
+                "",
+                "DAO",
+                "",
+                "",
+                "",
+                "",
+                ""
+            )
+        ),
+        NonFungibleLocalId("<WaterBearsDAO_13>") => Tuple(
+            Tuple(
+                "WaterBears DAO #13",
+                "https://arweave.net/7eb0hTcPkTDhvgiNNPulU8o3m4JIdvAG6W7y0eYnAfc",
+                "",
+                "DAO",
+                "",
+                "",
+                "",
+                "",
+                ""
+            )
+        ),
+        NonFungibleLocalId("<WaterBearsDAO_14>") => Tuple(
+            Tuple(
+                "WaterBears DAO #14",
+                "https://arweave.net/9yw98EJZb91naZTNjm9UXQv0QE-GH8KHuT92qNjXgL4",
+                "",
+                "DAO",
+                "",
+                "",
+                "",
+                "",
+                ""
+            )
+        ),
+        NonFungibleLocalId("<WaterBearsDAO_15>") => Tuple(
+            Tuple(
+                "WaterBears DAO #15",
+                "https://arweave.net/Jn4RFwC3eAqdske_V6BRC1OPUrOzOvjGZfaEvaI_TcU",
+                "",
+                "DAO",
+                "",
+                "",
+                "",
+                "",
+                ""
+            )
+        ),
+        NonFungibleLocalId("<WaterBearsDAO_16>") => Tuple(
+            Tuple(
+                "WaterBears DAO #16",
+                "https://arweave.net/P1ik_cR518oxY0Am2nhlxvkCMkZTmE9LzgKrzt7k380",
+                "",
+                "DAO",
+                "",
+                "",
+                "",
+                "",
+                ""
+            )
+        ),
+        NonFungibleLocalId("<WaterBearsDAO_17>") => Tuple(
+            Tuple(
+                "WaterBears DAO #17",
+                "https://arweave.net/HUOEqmkgB0rM57v2IIsfFrgNvDkfU69SNRmU-22GRt4",
+                "",
+                "DAO",
+                "",
+                "",
+                "",
+                "",
+                ""
+            )
+        ),
+        NonFungibleLocalId("<WaterBearsDAO_18>") => Tuple(
+            Tuple(
+                "WaterBears DAO #18",
+                "https://arweave.net/tpoVVlg0CQ23EyiihSpIwrodY7-WQhX1qFHLwYRwCsk",
+                "",
+                "DAO",
+                "",
+                "",
+                "",
+                "",
+                ""
+            )
+        ),
+        NonFungibleLocalId("<WaterBearsDAO_19>") => Tuple(
+            Tuple(
+                "WaterBears DAO #19",
+                "https://arweave.net/PdEUIk_ZvGduiCPuMpy5qS0ocJJZm5_y1AqdvC0kqU0",
+                "",
+                "DAO",
+                "",
+                "",
+                "",
+                "",
+                ""
+            )
+        ),
+        NonFungibleLocalId("<WaterBearsDAO_20>") => Tuple(
+            Tuple(
+                "WaterBears DAO #20",
+                "https://arweave.net/Euc5cUW7qIUV7EmRvwxmFkrqjbvOghSWFupBtTe3Kw8",
+                "",
+                "DAO",
+                "",
+                "",
+                "",
+                "",
+                ""
+            )
+        )
+    )
+;
+CALL_METHOD
+    Address("account_rdx129qmwg7xtcqsegd0zpulw3wpdpp7c4xmrwcssy2jt095827lls6rtq")
+    "deposit_batch"
+    Expression("ENTIRE_WORKTOP")
+;

@@ -1,0 +1,29 @@
+CALL_METHOD
+    Address("account_rdx129qmwg7xtcqsegd0zpulw3wpdpp7c4xmrwcssy2jt095827lls6rtq")
+    "create_proof_of_amount"
+    Address("resource_rdx1t506yl9nqyw90h9gxx323t67r2p99thssu3atwsnwum4l68t3uf9jv")
+    Decimal("1")
+;
+CALL_METHOD
+    Address("component_rdx1cp38s8l7g7ntvvszt7azj485nqzxflfqm4jupdf9m8axr304vsqz4y")
+    "mint_nft"
+    Array<Decimal>(
+        Decimal("1"),
+        Decimal("2"),
+        Decimal("3"),
+        Decimal("4"),
+        Decimal("5")
+    )
+    Array<String>(
+        "https://arweave.net/RcELr8fbTER3aJ-HvHeBLaicCikU_xZiWfqZVnke2NI",
+        "https://arweave.net/mIwohfcO38JblFxJdrajFiVJVyhmgVYXNGsKSdf350w",
+        "https://arweave.net/Bdd5tNpZS6fbqYe3yFnUTLrgAnrlPfRRaN_BrWBPEdw",
+        "https://arweave.net/KVH6sbjLjultdcHbQHZSFliIL2i6Kpc8LX4JfEbau4c",
+        "https://arweave.net/AJWfAWQrmUFN3RJfR04FQj0qbka2no5vPwI9dMBUeG0"
+    )
+;
+CALL_METHOD
+    Address("account_rdx129qmwg7xtcqsegd0zpulw3wpdpp7c4xmrwcssy2jt095827lls6rtq")
+    "deposit_batch"
+    Expression("ENTIRE_WORKTOP")
+;

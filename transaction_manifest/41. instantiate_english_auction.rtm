@@ -1,0 +1,29 @@
+CALL_METHOD
+    Address("account_rdx12xxj3j5lx4ls2303pwfs7rtfqnyw77uwc9fluz7d3er6x4vp3n2utz")
+    "withdraw_non_fungibles"
+    Address("resource_rdx1nguyesjve2e0wql8d9cepx7u63jtevdg05a7n5fc5m767mn4vkxpeq")
+    Array<NonFungibleLocalId>(
+        NonFungibleLocalId("<WaterBearsDAO_3>")
+    )
+;
+TAKE_ALL_FROM_WORKTOP
+    Address("resource_rdx1nguyesjve2e0wql8d9cepx7u63jtevdg05a7n5fc5m767mn4vkxpeq")
+    Bucket("bucket")
+;
+CALL_FUNCTION
+    Address("package_rdx1p49fqf3xjhan7f0e8r3mf57rmdznfcxnfw2remqleyq9725ds3a7uw")
+    "EnglishAuction"
+    "instantiate_english_auction"
+    Array<Bucket>(
+        Bucket("bucket")
+    )
+    Address("resource_rdx1tknxxxxxxxxxradxrdxxxxxxxxx009923554798xxxxxxxxxradxrd")
+    Address("resource_rdx1t506yl9nqyw90h9gxx323t67r2p99thssu3atwsnwum4l68t3uf9jv")
+    Address("resource_rdx1nguyesjve2e0wql8d9cepx7u63jtevdg05a7n5fc5m767mn4vkxpeq")
+    288u64
+;
+CALL_METHOD
+    Address("account_rdx12xxj3j5lx4ls2303pwfs7rtfqnyw77uwc9fluz7d3er6x4vp3n2utz")
+    "deposit_batch"
+    Expression("ENTIRE_WORKTOP")
+;

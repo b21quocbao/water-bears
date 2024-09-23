@@ -1,0 +1,15 @@
+CALL_METHOD
+    Address("account_rdx129qmwg7xtcqsegd0zpulw3wpdpp7c4xmrwcssy2jt095827lls6rtq")
+    "create_proof_of_amount"
+    Address("resource_rdx1t506yl9nqyw90h9gxx323t67r2p99thssu3atwsnwum4l68t3uf9jv")
+    Decimal("1")
+;
+CALL_METHOD
+    Address("component_rdx1czqx3kux3t2fgsaafufudc3626gdwn7e3fj62s6fzl2ukzu8xzu6kf")
+    "withdraw_payment"
+;
+CALL_METHOD
+    Address("account_rdx12xxj3j5lx4ls2303pwfs7rtfqnyw77uwc9fluz7d3er6x4vp3n2utz")
+    "deposit_batch"
+    Expression("ENTIRE_WORKTOP")
+;

@@ -1,0 +1,1128 @@
+use radix_common::types::{Epoch, Round};
+use scrypto::{prelude::Url, NonFungibleData};
+use scrypto_test::prelude::*;
+
+#[derive(ScryptoSbor, NonFungibleData, ManifestSbor)]
+struct MyNonFungibleDataType {
+    pub name: String,
+    pub description: String,
+    #[mutable]
+    pub key_image_url: Url,
+}
+
+#[test]
+fn test() {
+    // Setup the environment
+    let mut ledger = LedgerSimulatorBuilder::new()
+        .with_custom_genesis(CustomGenesis::default(
+            Epoch::of(1),
+            CustomGenesis::default_consensus_manager_config(),
+        ))
+        .build();
+
+    // Create an account
+    let (public_key, _private_key, account_component) = ledger.new_allocated_account();
+    let (buy_public_key, _private_key_2, buy_account_component) = ledger.new_allocated_account();
+
+    // Publish package
+    let package_address = ledger.compile_and_publish(this_package!());
+
+    let manifest = ManifestBuilder::new()
+        .lock_fee_from_faucet()
+        .get_free_xrd_from_faucet()
+        .take_from_worktop(XRD, dec!(1000), "bucket_1")
+        .try_deposit_entire_worktop_or_abort(account_component, None)
+        .try_deposit_batch_or_abort(account_component, ["bucket_1"], None)
+        .build();
+    let receipt = ledger.execute_manifest(
+        manifest,
+        vec![NonFungibleGlobalId::from_public_key(&public_key)],
+    );
+    receipt.expect_commit_success();
+
+    // Test the `instantiate_meme_nft` function.
+    let manifest = ManifestBuilder::new()
+        .lock_fee_from_faucet()
+        .call_function(
+            package_address,
+            "MemeNft",
+            "instantiate_meme_nft",
+            manifest_args!(),
+        )
+        .deposit_batch(account_component)
+        .build();
+    let receipt = ledger.execute_manifest(
+        manifest,
+        vec![NonFungibleGlobalId::from_public_key(&public_key)],
+    );
+    receipt.expect_commit_success();
+    let owner_badge = receipt.expect_commit(true).new_resource_addresses()[0];
+    let water_bear_resource = receipt.expect_commit(true).new_resource_addresses()[1];
+    let water_bear_component = receipt.expect_commit(true).new_component_addresses()[0];
+
+    // update_payment
+    let manifest = ManifestBuilder::new()
+        .lock_fee_from_faucet()
+        .create_proof_from_account_of_amount(account_component, owner_badge, dec!(1))
+        .call_method(water_bear_component, "update_payment", (XRD, dec!(250)))
+        .build();
+    let receipt = ledger.execute_manifest(
+        manifest,
+        vec![NonFungibleGlobalId::from_public_key(&public_key)],
+    );
+    receipt.expect_commit_success();
+
+    // mint_nft
+    let manifest = ManifestBuilder::new()
+        .lock_fee_from_faucet()
+        .create_proof_from_account_of_amount(account_component, owner_badge, dec!(1))
+        .call_method(
+            water_bear_component,
+            "mint_nft",
+            (
+                [dec!(1), dec!(2), dec!(3), dec!(4), dec!(5)],
+                [
+                    "https://arweave.net/SJy8goVGtZFy8FOgS3h8-RlyZzIwk8RucGMQ7e3N04c",
+                    "https://arweave.net/SJy8goVGtZFy8FOgS3h8-RlyZzIwk8RucGMQ7e3N04c",
+                    "https://arweave.net/SJy8goVGtZFy8FOgS3h8-RlyZzIwk8RucGMQ7e3N04c",
+                    "https://arweave.net/SJy8goVGtZFy8FOgS3h8-RlyZzIwk8RucGMQ7e3N04c",
+                    "https://arweave.net/SJy8goVGtZFy8FOgS3h8-RlyZzIwk8RucGMQ7e3N04c",
+                ],
+                ["Green", "Green", "Green", "Green", "Green"],
+                ["Red", "Red", "Red", "Red", "Red"],
+                ["", "", "", "", ""],
+                ["", "", "", "", ""],
+                ["", "", "", "", ""],
+                ["", "", "", "", ""],
+                ["", "", "", "", ""],
+            ),
+        )
+        .build();
+    let receipt = ledger.execute_manifest(
+        manifest,
+        vec![NonFungibleGlobalId::from_public_key(&public_key)],
+    );
+    receipt.expect_commit_success();
+
+    // buy_nft
+    let manifest = ManifestBuilder::new()
+        .lock_fee_from_faucet()
+        .withdraw_from_account(buy_account_component, XRD, dec!(750))
+        .take_all_from_worktop(XRD, "nft_bucket_1")
+        .call_method_with_name_lookup(water_bear_component, "buy_nft", |lookup| {
+            (lookup.bucket("nft_bucket_1"), dec!(3))
+        })
+        .deposit_batch(buy_account_component)
+        .build();
+    let receipt = ledger.execute_manifest(
+        manifest,
+        vec![NonFungibleGlobalId::from_public_key(&buy_public_key)],
+    );
+    receipt.expect_commit_success();
+
+    // buy_nft
+    let manifest = ManifestBuilder::new()
+        .lock_fee_from_faucet()
+        .withdraw_from_account(account_component, XRD, dec!(500))
+        .take_all_from_worktop(XRD, "nft_bucket_1")
+        .call_method_with_name_lookup(water_bear_component, "buy_nft", |lookup| {
+            (lookup.bucket("nft_bucket_1"), dec!(2))
+        })
+        .deposit_batch(account_component)
+        .build();
+    let receipt = ledger.execute_manifest(
+        manifest,
+        vec![NonFungibleGlobalId::from_public_key(&public_key)],
+    );
+    receipt.expect_commit_success();
+
+    // // withdraw_nft
+    // let manifest = ManifestBuilder::new()
+    //     .lock_fee_from_faucet()
+    //     .create_proof_from_account_of_amount(account_component, owner_badge, dec!(1))
+    //     .call_method(water_bear_component, "withdraw_nft", (dec!(2),))
+    //     .deposit_batch(account_component)
+    //     .build();
+    // let receipt = ledger.execute_manifest(
+    //     manifest,
+    //     vec![NonFungibleGlobalId::from_public_key(&public_key)],
+    // );
+    // receipt.expect_commit_success();
+
+    // // withdraw_from_vault
+    // let manifest = ManifestBuilder::new()
+    //     .lock_fee_from_faucet()
+    //     .create_proof_from_account_of_amount(account_component, owner_badge, dec!(1))
+    //     .call_method(water_bear_component, "withdraw_from_vault", (XRD,))
+    //     .deposit_batch(account_component)
+    //     .build();
+    // let receipt = ledger.execute_manifest(
+    //     manifest,
+    //     vec![NonFungibleGlobalId::from_public_key(&public_key)],
+    // );
+    // receipt.expect_commit_success();
+
+    // // Test the `instantiate_stake_pool` function.
+    // let manifest = ManifestBuilder::new()
+    //     .lock_fee_from_faucet()
+    //     .create_fungible_resource(
+    //         OwnerRole::Fixed(rule!(require(owner_badge))),
+    //         true,
+    //         18,
+    //         FungibleResourceRoles {
+    //             mint_roles: mint_roles! {
+    //                 minter => OWNER;
+    //                 minter_updater => OWNER;
+    //             },
+    //             burn_roles: burn_roles! {
+    //                 burner => OWNER;
+    //                 burner_updater => OWNER;
+    //             },
+    //             ..Default::default()
+    //         },
+    //         Default::default(),
+    //         Option::<Decimal>::from(dec!(1000000)),
+    //     )
+    //     .deposit_batch(account_component)
+    //     .build();
+    // let receipt = ledger.execute_manifest(
+    //     manifest,
+    //     vec![NonFungibleGlobalId::from_public_key(&public_key)],
+    // );
+    // let dna_token = receipt.expect_commit(true).new_resource_addresses()[0];
+
+    // let manifest = ManifestBuilder::new()
+    //     .lock_fee_from_faucet()
+    //     .call_function(
+    //         package_address,
+    //         "StakePool",
+    //         "instantiate_stake_pool",
+    //         manifest_args!(water_bear_resource, owner_badge, dna_token),
+    //     )
+    //     .deposit_batch(account_component)
+    //     .build();
+    // let receipt = ledger.execute_manifest(
+    //     manifest,
+    //     vec![NonFungibleGlobalId::from_public_key(&public_key)],
+    // );
+    // receipt.expect_commit_success();
+    // let stake_pool_component = receipt.expect_commit(true).new_component_addresses()[0];
+    // let id_resource = receipt.expect_commit(true).new_resource_addresses()[0];
+
+    // // deposit_reward_pool
+    // let manifest = ManifestBuilder::new()
+    //     .lock_fee_from_faucet()
+    //     .withdraw_from_account(account_component, dna_token, dec!(250))
+    //     .take_all_from_worktop(dna_token, "bucket")
+    //     .call_method_with_name_lookup(stake_pool_component, "deposit_reward_pool", |lookup| {
+    //         (lookup.bucket("bucket"),)
+    //     })
+    //     .build();
+    // let receipt = ledger.execute_manifest(
+    //     manifest,
+    //     vec![NonFungibleGlobalId::from_public_key(&public_key)],
+    // );
+    // receipt.expect_commit_success();
+
+    // // create_id
+    // let manifest = ManifestBuilder::new()
+    //     .lock_fee_from_faucet()
+    //     .call_method(stake_pool_component, "create_id", ())
+    //     .deposit_batch(account_component)
+    //     .build();
+    // let receipt = ledger.execute_manifest(
+    //     manifest,
+    //     vec![NonFungibleGlobalId::from_public_key(&public_key)],
+    // );
+    // receipt.expect_commit_success();
+
+    // let manifest = ManifestBuilder::new()
+    //     .lock_fee_from_faucet()
+    //     .call_method(stake_pool_component, "create_id", ())
+    //     .deposit_batch(buy_account_component)
+    //     .build();
+    // let receipt = ledger.execute_manifest(
+    //     manifest,
+    //     vec![NonFungibleGlobalId::from_public_key(&buy_public_key)],
+    // );
+    // receipt.expect_commit_success();
+
+    // // stake nft
+    // let manifest = ManifestBuilder::new()
+    //     .lock_fee_from_faucet()
+    //     .create_proof_from_account_of_non_fungibles(
+    //         account_component,
+    //         id_resource,
+    //         indexset!(NonFungibleLocalId::integer(1)),
+    //     )
+    //     .pop_from_auth_zone("proof_1")
+    //     .withdraw_non_fungibles_from_account(
+    //         account_component,
+    //         water_bear_resource,
+    //         indexset!(
+    //             NonFungibleLocalId::String(StringNonFungibleLocalId::new("WaterBear_1").unwrap()),
+    //             NonFungibleLocalId::String(StringNonFungibleLocalId::new("WaterBear_2").unwrap())
+    //         ),
+    //     )
+    //     .take_all_from_worktop(water_bear_resource, "nft_bucket_1")
+    //     .call_method_with_name_lookup(stake_pool_component, "stake", |lookup| {
+    //         (lookup.bucket("nft_bucket_1"), lookup.proof("proof_1"))
+    //     })
+    //     .build();
+    // let receipt = ledger.execute_manifest(
+    //     manifest,
+    //     vec![NonFungibleGlobalId::from_public_key(&public_key)],
+    // );
+    // receipt.expect_commit_success();
+
+    // let date_ms =
+    //     ledger.get_current_proposer_timestamp_ms() + 3 * 24 * 3600 * 1000 + 12 * 3600 * 1000;
+    // let receipt = ledger.advance_to_round_at_timestamp(Round::of(1), date_ms);
+    // receipt.expect_commit_success();
+
+    // // update_reward_factor
+    // let manifest = ManifestBuilder::new()
+    //     .lock_fee_from_faucet()
+    //     .create_proof_from_account_of_amount(account_component, owner_badge, dec!(1))
+    //     .call_method(stake_pool_component, "update_reward_factor", (dec!(4.9),))
+    //     .build();
+    // let receipt = ledger.execute_manifest(
+    //     manifest,
+    //     vec![NonFungibleGlobalId::from_public_key(&public_key)],
+    // );
+    // receipt.expect_commit_success();
+
+    // // claim_rewards
+    // let manifest = ManifestBuilder::new()
+    //     .lock_fee_from_faucet()
+    //     .create_proof_from_account_of_non_fungibles(
+    //         account_component,
+    //         id_resource,
+    //         indexset!(NonFungibleLocalId::integer(1)),
+    //     )
+    //     .pop_from_auth_zone("proof")
+    //     .call_method_with_name_lookup(stake_pool_component, "claim_rewards", |lookup| {
+    //         (lookup.proof("proof"),)
+    //     })
+    //     .deposit_batch(account_component)
+    //     .build();
+    // let receipt = ledger.execute_manifest(
+    //     manifest,
+    //     vec![NonFungibleGlobalId::from_public_key(&public_key)],
+    // );
+    // receipt.expect_commit_success();
+
+    // // false withdraw
+    // let manifest = ManifestBuilder::new()
+    //     .lock_fee_from_faucet()
+    //     .create_proof_from_account_of_non_fungibles(
+    //         buy_account_component,
+    //         id_resource,
+    //         indexset!(NonFungibleLocalId::integer(2)),
+    //     )
+    //     .pop_from_auth_zone("proof_1")
+    //     .call_method_with_name_lookup(stake_pool_component, "withdraw", |lookup| {
+    //         (
+    //             NonFungibleLocalId::String(StringNonFungibleLocalId::new("WaterBear_1").unwrap()),
+    //             lookup.proof("proof_1"),
+    //         )
+    //     })
+    //     .deposit_batch(buy_account_component)
+    //     .build();
+    // let receipt = ledger.execute_manifest(
+    //     manifest,
+    //     vec![NonFungibleGlobalId::from_public_key(&buy_public_key)],
+    // );
+    // receipt.expect_commit_failure();
+
+    // // withdraw
+    // let manifest = ManifestBuilder::new()
+    //     .lock_fee_from_faucet()
+    //     .create_proof_from_account_of_non_fungibles(
+    //         account_component,
+    //         id_resource,
+    //         indexset!(NonFungibleLocalId::integer(1)),
+    //     )
+    //     .pop_from_auth_zone("proof_1")
+    //     .call_method_with_name_lookup(stake_pool_component, "withdraw", |lookup| {
+    //         (
+    //             indexset!(
+    //                 NonFungibleLocalId::String(
+    //                     StringNonFungibleLocalId::new("WaterBear_1").unwrap()
+    //                 ),
+    //                 NonFungibleLocalId::String(
+    //                     StringNonFungibleLocalId::new("WaterBear_2").unwrap()
+    //                 )
+    //             ),
+    //             lookup.proof("proof_1"),
+    //         )
+    //     })
+    //     .deposit_batch(account_component)
+    //     .build();
+    // let receipt = ledger.execute_manifest(
+    //     manifest,
+    //     vec![NonFungibleGlobalId::from_public_key(&public_key)],
+    // );
+    // receipt.expect_commit_success();
+
+    // let date_ms =
+    //     ledger.get_current_proposer_timestamp_ms() + 10 * 24 * 3600 * 1000 + 12 * 3600 * 1000;
+    // let receipt = ledger.advance_to_round_at_timestamp(Round::of(1), date_ms);
+    // receipt.expect_commit_success();
+
+    // // claim_rewards
+    // let manifest = ManifestBuilder::new()
+    //     .lock_fee_from_faucet()
+    //     .create_proof_from_account_of_non_fungibles(
+    //         account_component,
+    //         id_resource,
+    //         indexset!(NonFungibleLocalId::integer(1)),
+    //     )
+    //     .pop_from_auth_zone("proof")
+    //     .call_method_with_name_lookup(stake_pool_component, "claim_rewards", |lookup| {
+    //         (lookup.proof("proof"),)
+    //     })
+    //     .deposit_batch(account_component)
+    //     .build();
+    // let receipt = ledger.execute_manifest(
+    //     manifest,
+    //     vec![NonFungibleGlobalId::from_public_key(&public_key)],
+    // );
+    // receipt.expect_commit_success();
+
+    // // withdraw_reward_pool
+    // let manifest = ManifestBuilder::new()
+    //     .lock_fee_from_faucet()
+    //     .create_proof_from_account_of_amount(account_component, owner_badge, dec!(1))
+    //     .call_method(stake_pool_component, "withdraw_reward_pool", (dec!(210),))
+    //     .deposit_batch(account_component)
+    //     .build();
+    // let receipt = ledger.execute_manifest(
+    //     manifest,
+    //     vec![NonFungibleGlobalId::from_public_key(&public_key)],
+    // );
+    // receipt.expect_commit_success();
+
+    // // withdraw_all_reward_pool
+    // let manifest = ManifestBuilder::new()
+    //     .lock_fee_from_faucet()
+    //     .create_proof_from_account_of_amount(account_component, owner_badge, dec!(1))
+    //     .call_method(stake_pool_component, "withdraw_all_reward_pool", ())
+    //     .deposit_batch(account_component)
+    //     .build();
+    // let receipt = ledger.execute_manifest(
+    //     manifest,
+    //     vec![NonFungibleGlobalId::from_public_key(&public_key)],
+    // );
+    // receipt.expect_commit_success();
+
+    // // update_reward_address
+    // let manifest = ManifestBuilder::new()
+    //     .lock_fee_from_faucet()
+    //     .create_proof_from_account_of_amount(account_component, owner_badge, dec!(1))
+    //     .call_method(stake_pool_component, "update_reward_address", (XRD,))
+    //     .build();
+    // let receipt = ledger.execute_manifest(
+    //     manifest,
+    //     vec![NonFungibleGlobalId::from_public_key(&public_key)],
+    // );
+    // receipt.expect_commit_success();
+
+    // // Test the `instantiate_breed_nft` function.
+    // let manifest = ManifestBuilder::new()
+    //     .lock_fee_from_faucet()
+    //     .call_function(
+    //         package_address,
+    //         "BreedNft",
+    //         "instantiate_breed_nft",
+    //         manifest_args!(owner_badge, water_bear_resource, dec!(2)),
+    //     )
+    //     .deposit_batch(account_component)
+    //     .build();
+    // let receipt = ledger.execute_manifest(
+    //     manifest,
+    //     vec![NonFungibleGlobalId::from_public_key(&public_key)],
+    // );
+    // receipt.expect_commit_success();
+    // let test_tube_component = receipt.expect_commit(true).new_component_addresses()[0];
+    // let test_tube_nft = receipt.expect_commit(true).new_resource_addresses()[0];
+
+    // // update burner
+    // let manifest = ManifestBuilder::new()
+    //     .lock_fee_from_faucet()
+    //     .create_proof_from_account_of_amount(account_component, owner_badge, dec!(1))
+    //     .set_role(
+    //         dna_token,
+    //         ObjectModuleId::Main,
+    //         RoleKey::from("burner"),
+    //         rule!(require(global_caller(test_tube_component))),
+    //     )
+    //     .build();
+    // let receipt = ledger.execute_manifest(
+    //     manifest,
+    //     vec![NonFungibleGlobalId::from_public_key(&public_key)],
+    // );
+    // receipt.expect_commit_success();
+
+    // // update_payment
+    // let manifest = ManifestBuilder::new()
+    //     .lock_fee_from_faucet()
+    //     .create_proof_from_account_of_amount(account_component, owner_badge, dec!(1))
+    //     .call_method(
+    //         test_tube_component,
+    //         "update_payment",
+    //         (dna_token, dec!(300)),
+    //     )
+    //     .build();
+    // let receipt = ledger.execute_manifest(
+    //     manifest,
+    //     vec![NonFungibleGlobalId::from_public_key(&public_key)],
+    // );
+    // receipt.expect_commit_success();
+
+    // // false buy_nft
+    // let manifest = ManifestBuilder::new()
+    //     .lock_fee_from_faucet()
+    //     .create_proof_from_account_of_non_fungibles(
+    //         account_component,
+    //         water_bear_resource,
+    //         indexset!(
+    //             NonFungibleLocalId::String(StringNonFungibleLocalId::new("WaterBear_1").unwrap()),
+    //             NonFungibleLocalId::String(StringNonFungibleLocalId::new("WaterBear_2").unwrap()),
+    //         ),
+    //     )
+    //     .pop_from_auth_zone("proof_1")
+    //     .withdraw_from_account(account_component, dna_token, dec!(899))
+    //     .take_all_from_worktop(dna_token, "bucket")
+    //     .call_method_with_name_lookup(test_tube_component, "buy_nft", |lookup| {
+    //         (lookup.bucket("bucket"), dec!(3), lookup.proof("proof_1"))
+    //     })
+    //     .deposit_batch(account_component)
+    //     .build();
+    // let receipt = ledger.execute_manifest(
+    //     manifest,
+    //     vec![NonFungibleGlobalId::from_public_key(&public_key)],
+    // );
+    // receipt.expect_commit_failure();
+
+    // // buy_nft
+    // let manifest = ManifestBuilder::new()
+    //     .lock_fee_from_faucet()
+    //     .create_proof_from_account_of_non_fungibles(
+    //         account_component,
+    //         water_bear_resource,
+    //         indexset!(
+    //             NonFungibleLocalId::String(StringNonFungibleLocalId::new("WaterBear_1").unwrap()),
+    //             NonFungibleLocalId::String(StringNonFungibleLocalId::new("WaterBear_2").unwrap()),
+    //         ),
+    //     )
+    //     .pop_from_auth_zone("proof_1")
+    //     .withdraw_from_account(account_component, dna_token, dec!(900))
+    //     .take_all_from_worktop(dna_token, "bucket")
+    //     .call_method_with_name_lookup(test_tube_component, "buy_nft", |lookup| {
+    //         (lookup.bucket("bucket"), dec!(3), lookup.proof("proof_1"))
+    //     })
+    //     .deposit_batch(account_component)
+    //     .build();
+    // let receipt = ledger.execute_manifest(
+    //     manifest,
+    //     vec![NonFungibleGlobalId::from_public_key(&public_key)],
+    // );
+    // receipt.expect_commit_success();
+
+    // // Test the `instantiate_breed_nft` function.
+    // let manifest = ManifestBuilder::new()
+    //     .lock_fee_from_faucet()
+    //     .call_function(
+    //         package_address,
+    //         "NewBreedNft",
+    //         "instantiate_breed_nft",
+    //         manifest_args!(owner_badge, water_bear_resource, dec!(2), test_tube_nft),
+    //     )
+    //     .deposit_batch(account_component)
+    //     .build();
+    // let receipt = ledger.execute_manifest(
+    //     manifest,
+    //     vec![NonFungibleGlobalId::from_public_key(&public_key)],
+    // );
+    // receipt.expect_commit_success();
+    // let new_test_tube_component = receipt.expect_commit(true).new_component_addresses()[0];
+
+    // // update burner
+    // let manifest = ManifestBuilder::new()
+    //     .lock_fee_from_faucet()
+    //     .create_proof_from_account_of_amount(account_component, owner_badge, dec!(1))
+    //     .set_role(
+    //         dna_token,
+    //         ObjectModuleId::Main,
+    //         RoleKey::from("burner"),
+    //         rule!(require(global_caller(new_test_tube_component))),
+    //     )
+    //     .build();
+    // let receipt = ledger.execute_manifest(
+    //     manifest,
+    //     vec![NonFungibleGlobalId::from_public_key(&public_key)],
+    // );
+    // receipt.expect_commit_success();
+
+    // // update minter
+    // let manifest = ManifestBuilder::new()
+    //     .lock_fee_from_faucet()
+    //     .create_proof_from_account_of_amount(account_component, owner_badge, dec!(1))
+    //     .set_role(
+    //         test_tube_nft,
+    //         ObjectModuleId::Main,
+    //         RoleKey::from("minter"),
+    //         rule!(require(global_caller(new_test_tube_component))),
+    //     )
+    //     .build();
+    // let receipt = ledger.execute_manifest(
+    //     manifest,
+    //     vec![NonFungibleGlobalId::from_public_key(&public_key)],
+    // );
+    // receipt.expect_commit_success();
+
+    // // update_payment
+    // let manifest = ManifestBuilder::new()
+    //     .lock_fee_from_faucet()
+    //     .create_proof_from_account_of_amount(account_component, owner_badge, dec!(1))
+    //     .call_method(
+    //         new_test_tube_component,
+    //         "update_payment",
+    //         (dna_token, dec!(300)),
+    //     )
+    //     .build();
+    // let receipt = ledger.execute_manifest(
+    //     manifest,
+    //     vec![NonFungibleGlobalId::from_public_key(&public_key)],
+    // );
+    // receipt.expect_commit_success();
+
+    // // update_supply
+    // let manifest = ManifestBuilder::new()
+    //     .lock_fee_from_faucet()
+    //     .create_proof_from_account_of_amount(account_component, owner_badge, dec!(1))
+    //     .call_method(
+    //         new_test_tube_component,
+    //         "update_supply",
+    //         (dec!(1000),),
+    //     )
+    //     .build();
+    // let receipt = ledger.execute_manifest(
+    //     manifest,
+    //     vec![NonFungibleGlobalId::from_public_key(&public_key)],
+    // );
+    // receipt.expect_commit_success();
+
+    // // false buy_nft
+    // let manifest = ManifestBuilder::new()
+    //     .lock_fee_from_faucet()
+    //     .create_proof_from_account_of_non_fungibles(
+    //         account_component,
+    //         water_bear_resource,
+    //         indexset!(
+    //             NonFungibleLocalId::String(StringNonFungibleLocalId::new("WaterBear_1").unwrap()),
+    //             NonFungibleLocalId::String(StringNonFungibleLocalId::new("WaterBear_2").unwrap()),
+    //         ),
+    //     )
+    //     .pop_from_auth_zone("proof_1")
+    //     .withdraw_from_account(account_component, dna_token, dec!(899))
+    //     .take_all_from_worktop(dna_token, "bucket")
+    //     .call_method_with_name_lookup(new_test_tube_component, "buy_nft", |lookup| {
+    //         (lookup.bucket("bucket"), dec!(3), lookup.proof("proof_1"))
+    //     })
+    //     .deposit_batch(account_component)
+    //     .build();
+    // let receipt = ledger.execute_manifest(
+    //     manifest,
+    //     vec![NonFungibleGlobalId::from_public_key(&public_key)],
+    // );
+    // receipt.expect_commit_failure();
+
+    // // buy_nft
+    // let manifest = ManifestBuilder::new()
+    //     .lock_fee_from_faucet()
+    //     .create_proof_from_account_of_non_fungibles(
+    //         account_component,
+    //         water_bear_resource,
+    //         indexset!(
+    //             NonFungibleLocalId::String(StringNonFungibleLocalId::new("WaterBear_1").unwrap()),
+    //             NonFungibleLocalId::String(StringNonFungibleLocalId::new("WaterBear_2").unwrap()),
+    //         ),
+    //     )
+    //     .pop_from_auth_zone("proof_1")
+    //     .withdraw_from_account(account_component, dna_token, dec!(900))
+    //     .take_all_from_worktop(dna_token, "bucket")
+    //     .call_method_with_name_lookup(new_test_tube_component, "buy_nft", |lookup| {
+    //         (lookup.bucket("bucket"), dec!(3), lookup.proof("proof_1"))
+    //     })
+    //     .deposit_batch(account_component)
+    //     .build();
+    // let receipt = ledger.execute_manifest(
+    //     manifest,
+    //     vec![NonFungibleGlobalId::from_public_key(&public_key)],
+    // );
+    // receipt.expect_commit_success();
+    let owner_badge = XRD;
+
+    // // Test the `instantiate_sludge` function.
+    // let manifest = ManifestBuilder::new()
+    //     .lock_fee_from_faucet()
+    //     .call_function(
+    //         package_address,
+    //         "SludgeNft",
+    //         "instantiate_sludge",
+    //         manifest_args!(owner_badge),
+    //     )
+    //     .deposit_batch(account_component)
+    //     .build();
+    // let receipt = ledger.execute_manifest(
+    //     manifest,
+    //     vec![NonFungibleGlobalId::from_public_key(&public_key)],
+    // );
+    // receipt.expect_commit_success();
+    // let water_bear_resource = receipt.expect_commit(true).new_resource_addresses()[0];
+    // let water_bear_component = receipt.expect_commit(true).new_component_addresses()[0];
+
+    // // update_payment
+    // let manifest = ManifestBuilder::new()
+    //     .lock_fee_from_faucet()
+    //     .create_proof_from_account_of_amount(account_component, owner_badge, dec!(1))
+    //     .call_method(water_bear_component, "update_payment", (XRD, dec!(250)))
+    //     .build();
+    // let receipt = ledger.execute_manifest(
+    //     manifest,
+    //     vec![NonFungibleGlobalId::from_public_key(&public_key)],
+    // );
+    // receipt.expect_commit_success();
+
+    // // mint_nft
+    // let manifest = ManifestBuilder::new()
+    //     .lock_fee_from_faucet()
+    //     .create_proof_from_account_of_amount(account_component, owner_badge, dec!(1))
+    //     .call_method(
+    //         water_bear_component,
+    //         "mint_nft",
+    //         ([dec!(1), dec!(2), dec!(3), dec!(4), dec!(5)],),
+    //     )
+    //     .build();
+    // let receipt = ledger.execute_manifest(
+    //     manifest,
+    //     vec![NonFungibleGlobalId::from_public_key(&public_key)],
+    // );
+    // receipt.expect_commit_success();
+
+    // // buy_nft
+    // let manifest = ManifestBuilder::new()
+    //     .lock_fee_from_faucet()
+    //     .withdraw_from_account(account_component, XRD, dec!(750))
+    //     .take_all_from_worktop(XRD, "nft_bucket_1")
+    //     .call_method_with_name_lookup(water_bear_component, "buy_nft", |lookup| {
+    //         (lookup.bucket("nft_bucket_1"), dec!(3))
+    //     })
+    //     .deposit_batch(account_component)
+    //     .build();
+    // let receipt = ledger.execute_manifest(
+    //     manifest,
+    //     vec![NonFungibleGlobalId::from_public_key(&public_key)],
+    // );
+    // receipt.expect_commit_success();
+
+    // // withdraw_nft
+    // let manifest = ManifestBuilder::new()
+    //     .lock_fee_from_faucet()
+    //     .create_proof_from_account_of_amount(account_component, owner_badge, dec!(1))
+    //     .call_method(water_bear_component, "withdraw_nft", (dec!(2),))
+    //     .deposit_batch(account_component)
+    //     .build();
+    // let receipt = ledger.execute_manifest(
+    //     manifest,
+    //     vec![NonFungibleGlobalId::from_public_key(&public_key)],
+    // );
+    // receipt.expect_commit_success();
+
+    // // withdraw_from_vault
+    // let manifest = ManifestBuilder::new()
+    //     .lock_fee_from_faucet()
+    //     .create_proof_from_account_of_amount(account_component, owner_badge, dec!(1))
+    //     .call_method(water_bear_component, "withdraw_from_vault", (XRD,))
+    //     .deposit_batch(account_component)
+    //     .build();
+    // let receipt = ledger.execute_manifest(
+    //     manifest,
+    //     vec![NonFungibleGlobalId::from_public_key(&public_key)],
+    // );
+    // receipt.expect_commit_success();
+
+    // Test the `instantiate_english_auction` function.
+    let manifest = ManifestBuilder::new()
+        .lock_fee_from_faucet()
+        .create_non_fungible_resource(
+            OwnerRole::Fixed(rule!(require(owner_badge))),
+            NonFungibleIdType::Integer,
+            true,
+            NonFungibleResourceRoles {
+                mint_roles: mint_roles! {
+                    minter => OWNER;
+                    minter_updater => OWNER;
+                },
+                burn_roles: burn_roles! {
+                    burner => OWNER;
+                    burner_updater => OWNER;
+                },
+                ..Default::default()
+            },
+            Default::default(),
+            Some(
+                indexmap! {
+                NonFungibleLocalId::integer(1) => MyNonFungibleDataType {
+                    name: "hello world".to_owned(),
+                    description: "lorem ipsum".to_owned(),
+                    key_image_url: Url::of("https://assets-global.website-files.com/618962e5f285fb3c879d82ca/61b8f414d213fd7349b654b9_icon-DEX.svg"),
+                },
+            }
+            )
+        )
+        .deposit_batch(account_component)
+        .build();
+
+    let receipt = ledger.execute_manifest(
+        manifest,
+        vec![NonFungibleGlobalId::from_public_key(&public_key)],
+    );
+    let non_fungible_tokens = receipt.expect_commit(true).new_resource_addresses()[0];
+    let accepted_payment_token = XRD;
+    let relative_ending_epoch = ledger.get_current_epoch().number() + 24 * 12;
+
+    let manifest = ManifestBuilder::new()
+        .lock_fee_from_faucet()
+        .withdraw_non_fungibles_from_account(
+            account_component,
+            non_fungible_tokens,
+            btreeset!(NonFungibleLocalId::integer(1)),
+        )
+        .take_all_from_worktop(non_fungible_tokens, "bucket")
+        .call_function_with_name_lookup(
+            package_address,
+            "EnglishAuction",
+            "instantiate_english_auction",
+            |lookup| {
+                (
+                    vec![lookup.bucket("bucket")],
+                    accepted_payment_token,
+                    owner_badge,
+                    water_bear_resource,
+                    relative_ending_epoch,
+                )
+            },
+        )
+        .deposit_batch(account_component)
+        .build();
+    let receipt = ledger.execute_manifest(
+        manifest,
+        vec![NonFungibleGlobalId::from_public_key(&public_key)],
+    );
+    receipt.expect_commit_success();
+    let english_auction_component = receipt.expect_commit(true).new_component_addresses()[0];
+    let bidder_badge = receipt.expect_commit(true).new_resource_addresses()[0];
+
+    // bid
+    let manifest = ManifestBuilder::new()
+        .lock_fee_from_faucet()
+        .create_proof_from_account_of_non_fungibles(
+            account_component,
+            water_bear_resource,
+            indexset!(
+                NonFungibleLocalId::String(StringNonFungibleLocalId::new("WaterBear_4").unwrap()),
+            ),
+        )
+        .withdraw_from_account(account_component, XRD, dec!(100))
+        .take_all_from_worktop(XRD, "bucket")
+        .call_method_with_name_lookup(english_auction_component, "bid", |lookup| {
+            (lookup.bucket("bucket"),)
+        })
+        .deposit_batch(account_component)
+        .build();
+    let receipt = ledger.execute_manifest(
+        manifest,
+        vec![NonFungibleGlobalId::from_public_key(&public_key)],
+    );
+    receipt.expect_commit_success();
+
+    // bid less
+    let manifest = ManifestBuilder::new()
+        .lock_fee_from_faucet()
+        .create_proof_from_account_of_non_fungibles(
+            buy_account_component,
+            water_bear_resource,
+            indexset!(
+                NonFungibleLocalId::String(StringNonFungibleLocalId::new("WaterBear_1").unwrap()),
+            ),
+        )
+        .withdraw_from_account(buy_account_component, XRD, dec!(80))
+        .take_all_from_worktop(XRD, "bucket")
+        .call_method_with_name_lookup(english_auction_component, "bid", |lookup| {
+            (lookup.bucket("bucket"),)
+        })
+        .deposit_batch(buy_account_component)
+        .build();
+    let receipt = ledger.execute_manifest(
+        manifest,
+        vec![NonFungibleGlobalId::from_public_key(&buy_public_key)],
+    );
+    receipt.expect_commit_failure();
+
+    // bid more
+    let manifest = ManifestBuilder::new()
+        .lock_fee_from_faucet()
+        .create_proof_from_account_of_non_fungibles(
+            buy_account_component,
+            water_bear_resource,
+            indexset!(
+                NonFungibleLocalId::String(StringNonFungibleLocalId::new("WaterBear_1").unwrap()),
+            ),
+        )
+        .withdraw_from_account(buy_account_component, XRD, dec!(120))
+        .take_all_from_worktop(XRD, "bucket")
+        .call_method_with_name_lookup(english_auction_component, "bid", |lookup| {
+            (lookup.bucket("bucket"),)
+        })
+        .deposit_batch(buy_account_component)
+        .build();
+    let receipt = ledger.execute_manifest(
+        manifest,
+        vec![NonFungibleGlobalId::from_public_key(&buy_public_key)],
+    );
+    receipt.expect_commit_success();
+
+    let vault_id = ledger.get_component_vaults(
+        account_component, 
+        bidder_badge
+    );
+    let (_decimal, local_ids) = ledger.inspect_non_fungible_vault(vault_id[0]).unwrap();
+    let local_id: Vec<NonFungibleLocalId> = local_ids.collect();
+    let badge_nft = local_id.last().unwrap().clone();
+
+    let vault_id = ledger.get_component_vaults(
+        buy_account_component, 
+        bidder_badge
+    );
+    let (_decimal, local_ids) = ledger.inspect_non_fungible_vault(vault_id[0]).unwrap();
+    let local_id: Vec<NonFungibleLocalId> = local_ids.collect();
+    let badge_nft_2 = local_id.last().unwrap().clone();
+    
+    // increase_bid_less
+    let manifest = ManifestBuilder::new()
+        .lock_fee_from_faucet()
+        .withdraw_from_account(account_component, XRD, dec!(20))
+        .take_all_from_worktop(XRD, "bucket")
+        .create_proof_from_account_of_non_fungibles(
+            account_component,
+            bidder_badge,
+            indexset!(badge_nft.clone()),
+        )
+        .pop_from_auth_zone("proof")
+        .call_method_with_name_lookup(english_auction_component, "increase_bid", |lookup| {
+            (lookup.bucket("bucket"), lookup.proof("proof"), )
+        })
+        .deposit_batch(account_component)
+        .build();
+    let receipt = ledger.execute_manifest(
+        manifest,
+        vec![NonFungibleGlobalId::from_public_key(&public_key)],
+    );
+    receipt.expect_commit_failure();
+
+    // increase_bid_more
+    let manifest = ManifestBuilder::new()
+        .lock_fee_from_faucet()
+        .withdraw_from_account(account_component, XRD, dec!(21))
+        .take_all_from_worktop(XRD, "bucket")
+        .create_proof_from_account_of_non_fungibles(
+            account_component,
+            bidder_badge,
+            indexset!(badge_nft.clone()),
+        )
+        .pop_from_auth_zone("proof")
+        .call_method_with_name_lookup(english_auction_component, "increase_bid", |lookup| {
+            (lookup.bucket("bucket"), lookup.proof("proof"), )
+        })
+        .deposit_batch(account_component)
+        .build();
+    let receipt = ledger.execute_manifest(
+        manifest,
+        vec![NonFungibleGlobalId::from_public_key(&public_key)],
+    );
+    receipt.expect_commit_success();
+
+    // cancel_bid_fail_before
+    let manifest = ManifestBuilder::new()
+        .lock_fee_from_faucet()
+        .withdraw_non_fungibles_from_account(
+            account_component,
+            bidder_badge,
+            indexset!(badge_nft.clone()),
+        )
+        .take_all_from_worktop(bidder_badge, "bucket")
+        .call_method_with_name_lookup(english_auction_component, "cancel_bid", |lookup| {
+            (lookup.bucket("bucket"),)
+        })
+        .deposit_batch(account_component)
+        .build();
+    let receipt = ledger.execute_manifest(
+        manifest,
+        vec![NonFungibleGlobalId::from_public_key(&public_key)],
+    );
+    let commit = receipt.expect_commit_failure();
+
+    ledger.set_current_epoch(Epoch::of(relative_ending_epoch + 2));
+
+    // claim_nfts_fail
+    let manifest = ManifestBuilder::new()
+        .lock_fee_from_faucet()
+        .withdraw_non_fungibles_from_account(
+            buy_account_component,
+            bidder_badge,
+            indexset!(badge_nft_2.clone()),
+        )
+        .take_all_from_worktop(bidder_badge, "bucket")
+        .call_method_with_name_lookup(english_auction_component, "claim_nfts", |lookup| {
+            (lookup.bucket("bucket"),)
+        })
+        .deposit_batch(buy_account_component)
+        .build();
+    let receipt = ledger.execute_manifest(
+        manifest,
+        vec![NonFungibleGlobalId::from_public_key(&buy_public_key)],
+    );
+    let commit = receipt.expect_commit_failure();
+
+    // claim_nfts
+    let manifest = ManifestBuilder::new()
+        .lock_fee_from_faucet()
+        .withdraw_non_fungibles_from_account(
+            account_component,
+            bidder_badge,
+            indexset!(badge_nft.clone()),
+        )
+        .take_all_from_worktop(bidder_badge, "bucket")
+        .call_method_with_name_lookup(english_auction_component, "claim_nfts", |lookup| {
+            (lookup.bucket("bucket"),)
+        })
+        .deposit_batch(account_component)
+        .build();
+    let receipt = ledger.execute_manifest(
+        manifest,
+        vec![NonFungibleGlobalId::from_public_key(&public_key)],
+    );
+    let commit = receipt.expect_commit_success();
+
+    assert_eq!(
+        ledger.sum_descendant_balance_changes(commit, account_component.as_node_id()), 
+        indexmap!(
+            bidder_badge => BalanceChange::NonFungible {
+                added: btreeset![],
+                removed: btreeset![badge_nft.clone()]
+            },
+            non_fungible_tokens => BalanceChange::NonFungible {
+                added: btreeset![NonFungibleLocalId::integer(1)],
+                removed: btreeset![]
+            },
+        )
+    );
+    
+    // cancel_bid_fail
+    let manifest = ManifestBuilder::new()
+        .lock_fee_from_faucet()
+        .withdraw_non_fungibles_from_account(
+            account_component,
+            bidder_badge,
+            indexset!(badge_nft.clone()),
+        )
+        .take_all_from_worktop(bidder_badge, "bucket")
+        .call_method_with_name_lookup(english_auction_component, "cancel_bid", |lookup| {
+            (lookup.bucket("bucket"),)
+        })
+        .deposit_batch(account_component)
+        .build();
+    let receipt = ledger.execute_manifest(
+        manifest,
+        vec![NonFungibleGlobalId::from_public_key(&public_key)],
+    );
+    let commit = receipt.expect_commit_failure();
+
+    // cancel_bid
+    let manifest = ManifestBuilder::new()
+        .lock_fee_from_faucet()
+        .withdraw_non_fungibles_from_account(
+            buy_account_component,
+            bidder_badge,
+            indexset!(badge_nft_2.clone()),
+        )
+        .take_all_from_worktop(bidder_badge, "bucket")
+        .call_method_with_name_lookup(english_auction_component, "cancel_bid", |lookup| {
+            (lookup.bucket("bucket"),)
+        })
+        .deposit_batch(buy_account_component)
+        .build();
+    let receipt = ledger.execute_manifest(
+        manifest,
+        vec![NonFungibleGlobalId::from_public_key(&buy_public_key)],
+    );
+    let commit = receipt.expect_commit_success();
+
+    assert_eq!(
+        ledger.sum_descendant_balance_changes(commit, buy_account_component.as_node_id()), 
+        indexmap!(
+            bidder_badge => BalanceChange::NonFungible {
+                added: btreeset![],
+                removed: btreeset![badge_nft_2.clone()]
+            },
+            XRD => BalanceChange::Fungible(dec!(120)),
+        )
+    );
+
+    // Test the `instantiate_sludge` function.
+    let manifest = ManifestBuilder::new()
+        .lock_fee_from_faucet()
+        .call_function(
+            package_address,
+            "DaoNft",
+            "instantiate_dao",
+            manifest_args!(owner_badge),
+        )
+        .deposit_batch(account_component)
+        .build();
+    let receipt = ledger.execute_manifest(
+        manifest,
+        vec![NonFungibleGlobalId::from_public_key(&public_key)],
+    );
+    receipt.expect_commit_success();
+    let water_bear_dao_component = receipt.expect_commit(true).new_component_addresses()[0];
+
+    // mint_nft
+    let manifest = ManifestBuilder::new()
+        .lock_fee_from_faucet()
+        .create_proof_from_account_of_amount(account_component, owner_badge, dec!(1))
+        .call_method(
+            water_bear_dao_component,
+            "mint_nft",
+            (
+                [dec!(1), dec!(2), dec!(3), dec!(4), dec!(5)],
+                [
+                    "https://arweave.net/SJy8goVGtZFy8FOgS3h8-RlyZzIwk8RucGMQ7e3N04c",
+                    "https://arweave.net/SJy8goVGtZFy8FOgS3h8-RlyZzIwk8RucGMQ7e3N04c",
+                    "https://arweave.net/SJy8goVGtZFy8FOgS3h8-RlyZzIwk8RucGMQ7e3N04c",
+                    "https://arweave.net/SJy8goVGtZFy8FOgS3h8-RlyZzIwk8RucGMQ7e3N04c",
+                    "https://arweave.net/SJy8goVGtZFy8FOgS3h8-RlyZzIwk8RucGMQ7e3N04c",
+                ],
+            ),
+        )
+        .deposit_batch(account_component)
+        .build();
+    let receipt = ledger.execute_manifest(
+        manifest,
+        vec![NonFungibleGlobalId::from_public_key(&public_key)],
+    );
+    receipt.expect_commit_success();
+}

@@ -1,0 +1,11 @@
+CALL_FUNCTION
+    Address("package_rdx1p49fqf3xjhan7f0e8r3mf57rmdznfcxnfw2remqleyq9725ds3a7uw")
+    "DaoNft"
+    "instantiate_dao"
+    Address("resource_rdx1t506yl9nqyw90h9gxx323t67r2p99thssu3atwsnwum4l68t3uf9jv")
+;
+CALL_METHOD
+    Address("account_rdx129qmwg7xtcqsegd0zpulw3wpdpp7c4xmrwcssy2jt095827lls6rtq")
+    "deposit_batch"
+    Expression("ENTIRE_WORKTOP")
+;
